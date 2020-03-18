@@ -34,8 +34,6 @@ def word_collector(n: int):
         next_word = (input(f'Enter word {i}: '))
         while True:
             if re.match("^[a-zA-Z]*$", next_word):
-                # print(f'Next_word: {next_word}')
-                # print(f'words: {words}')
                 if next_word.upper() in words:
                     next_word = input(f'Duplicate word.  Please enter an '
                         f'alternate word {i}: ')
@@ -43,17 +41,56 @@ def word_collector(n: int):
             else:
                 next_word = input(f'Please enter a valid word {i}: ')
         words.append(next_word.upper())
-    # TODO: Build check for duplicate words
-    words = sorted(words, key = lambda x: len(x))
-    words.reverse()
     word_list = sorted(words)
-    print(f'Your words: {word_list}')
+    change_word()
+    word_list = sorted(word_list)
+    words = sorted(word_list, key = lambda x: len(x))
+    words.reverse()
+    print(words)
+    print(word_list)
     word_set = dict()
     # count = 0
     for count in range(0,len(words)):
         word_set[count] = {'word': words[count], 'set': {*words[count]}}
         # count += 1
     return word_set
+
+def change_word():
+    global word_list
+    global changed_words
+    changed_words = []
+    while True:
+        change_word = input('Would you like to change any words (Y/N)? ')
+        if re.match("^[yY]{1,1}$", change_word):
+            for count in range(0, len(word_list)):
+                print(f'{count}: {word_list[count]}')
+            while True:
+                word_num = input('Enter the number of the word to change: ')
+                if re.match("^[0-9]{1,2}$", word_num):
+                    word_num = int(word_num)
+                    try:
+                        print(f'The word to change: {word_list[word_num]}')
+                        changed_words.append(word_num)
+                        while True:
+                            new_word = input('Enter the new word: ')
+                            if re.match("^[a-zA-Z]*$", new_word):
+                                if new_word.upper() in word_list:
+                                    print('That is a duplicate word.')
+                                    continue
+                                word_list[word_num] = new_word.upper()
+                                print('Your word list has been updated.')
+                                break
+                            else:
+                                print('That is not a valid word.')
+                    except Exception as e:
+                        print(f'{e}\nThat is not a valid selection.')
+                        continue
+                    break
+                else:
+                    print('That is not a valid selection.')
+        else:
+            break
+    return
 
 def grid_builder(grid: int):
     """
@@ -213,8 +250,8 @@ def grid_map_export_txt(key = 'N'):
                         f.write(grid_map[f'{i}-{j}'][0])
                 f.write(' ')
         f.write('\n\n')
-        for count in range(0,len(word_set)):
-            f.write(f"{word_set[count]['word']}\n")
+        for word in word_list:
+            f.write(f"{word}\n")
     print('Done')
 
 @timer
@@ -250,10 +287,10 @@ def grid_map_export_excel(key = 'N'):
     curr_row += 1
     ws.merge_cells(start_row=curr_row, start_column=1, 
         end_row=curr_row, end_column=grid)
-    for count in range(0,len(word_set)):
+    for word in word_list:
         curr_row += 1
         ws.cell(row = curr_row, column = 1
-            ).value = f"{word_set[count]['word']}"
+            ).value = word
     # TODO: Add Try/ Except handling to cover file being open with same name
     if key == 'Y':
         wb.save(f'{word_collection}_Key.xlsx')
@@ -306,6 +343,41 @@ def save_grid_maps():
     tw.insert_table('Collection_Grid', word_collections_id = this_key,
         grid_maps_id = this_grid, difficulty = difficulty, grid_size = grid)
 
+def load_collections():
+    global word_list
+    word_list = []
+    collection_list = tw.get_data('Word_Collections', columns = '*')
+    print('Available collections:')
+    for collection in collection_list:
+        print(f'{collection[0]}: {collection[1]}')
+    while True:
+        collection = input('Select the list to load: ')
+        if re.match('^[0-9]{1,2}$', collection):
+            try:
+                collection = int(collection)
+                words = tw.get_data('Words', columns = '*', 
+                    condition = f"word_collections_id = \'{collection}\'")
+                print(f'Words in the {collection_list[collection - 1][1]} '
+                    'Collection:')
+                for word in words:
+                    word_list.append(word[2])
+                    print(word[2])
+                break
+            except Exception as e:
+                print(f'{e}\nThat is not a valid selection.')
+        else:
+            print('That is not a valid selection.')
+    change_word()
+    if changed_words != []:
+        for change in changed_words:
+            # print(f'change = {change}, collection = {collection_list[collection - 1][1]},'
+            #     f' new word = {word_list[change]}')
+            tw.update_data('Words', word = word_list[change], 
+                id = words[change][0])
+            print(f'Replaced {words[change][0]} with {word_list[change]}')
+    else:
+        print('No changes made.')
+    
 
 # Start of script
 
@@ -313,6 +385,7 @@ def save_grid_maps():
 cell_ctr = Alignment(horizontal='center')
 tw = WordSearchDB('WordSearch.db')
 
+# TODO:  Set a minimum of 2 words
 num_words = input('Enter the number of words in collection: ')
 word_set = integer_check(word_collector, num_words)
 
@@ -369,11 +442,17 @@ save_collection = input(f'Save {word_collection} Word Collection to database '
     '(Y/N)? ')
 if re.match('^[yY]{1,1}$', save_collection):
     save_collections()
-    save_grid_map = input(f'Save {word_collection} Word Search puzzle to database '
-        '(Y/N)? ')
+    save_grid_map = input(f'Save {word_collection} Word Search puzzle to '
+        'database (Y/N)? ')
     if re.match('^[yY]{1,1}$', save_grid_map):
         save_grid_maps()
 
-change_word = input(f'Change any words in {word_collection} (Y/N)?')
+load_collection = input('Would you like to load an existing Word Collection '
+    '(Y/N)? ')
+if re.match('^[yY]{1,1}$', load_collection):
+    load_collections()
+
+
+# change_word = input(f'Change any words in {word_collection} (Y/N)?')
 # TODO:  Add functionality to pull down the words and go through them one
 # at a time and allow for changes; have the word replaced in the db.
