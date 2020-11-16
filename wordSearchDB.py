@@ -12,8 +12,8 @@ class WordSearchDB:
             (id INTEGER PRIMARY KEY, word_collections_id INTEGER,
             word TEXT, UNIQUE(word_collections_id, word))''')
         self.cur.execute('''CREATE TABLE IF NOT EXISTS Grid_Maps
-            (grid_maps_id INTEGER NOT NULL, cell TEXT, letter TEXT, word_key TEXT,
-            UNIQUE(grid_maps_id, cell))''')
+            (grid_maps_id INTEGER NOT NULL, cell TEXT, letter TEXT, 
+            word_key TEXT, UNIQUE(grid_maps_id, cell))''')
         self.cur.execute('''CREATE TABLE IF NOT EXISTS Collection_Grid
             (word_collections_id INTEGER, grid_maps_id INTEGER UNIQUE, 
             difficulty INTEGER, grid_size INTEGER)''')
@@ -62,6 +62,26 @@ class WordSearchDB:
             print("SELECT {} FROM {}".format(
                 kwargs['id_'], table_name))
         return this_id
+
+    def get_data(self, table_name, **kwargs):
+        # if table_name == 'Word_Collections':
+        if table_name == 'Words':
+            self.cur.execute("SELECT {} FROM {} WHERE {}".format(
+                kwargs['columns'], table_name, kwargs['condition']))
+            data_list = self.cur.fetchall()
+        else:
+            self.cur.execute("SELECT {} FROM {}".format(
+                kwargs['columns'], table_name))
+            data_list = self.cur.fetchall()
+        # TODO: Consolidate fetchall()
+        return data_list
+
+    def update_data(self, table_name, loop = 'last', **kwargs):
+        if table_name == 'Words':
+            self.cur.execute("UPDATE {} SET word = ? WHERE id = ?".format(
+                table_name), (kwargs['word'], kwargs['id']))
+        if loop == 'last':
+            self.conn.commit()
 
     def __del__(self):
         self.conn.close()

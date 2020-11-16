@@ -388,6 +388,7 @@ tw = WordSearchDB('WordSearch.db')
 # TODO:  Set a minimum of 2 words
 num_words = input('Enter the number of words in collection: ')
 word_set = integer_check(word_collector, num_words)
+print(f'Word Set = {word_set}')
 
 long_word = word_set[0]['word']
 min_grid_size = len(long_word) + int(len(word_set) * .5)

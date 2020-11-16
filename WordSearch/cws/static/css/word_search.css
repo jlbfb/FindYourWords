@@ -1,0 +1,37 @@
+h1 {
+    color: orange;
+}
+
+.board_options {
+    width: 105px;
+}
+
+.center {
+    text-align: center;
+}
+
+.game_board {
+    align-items: center;
+    align-content: center;
+}
+
+.game_name {
+    font-variant: small-caps;
+    color: orange;
+}
+
+.grid {
+    text-align: center;
+}
+
+.print_0 {
+    font-size: 1.8em;   
+}
+
+.print_25 {
+    font-size: 1.5em;   
+}
+
+.print_35 {
+    font-size: 1.2em;   
+}

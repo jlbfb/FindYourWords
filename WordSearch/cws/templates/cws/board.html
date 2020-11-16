@@ -1,0 +1,55 @@
+{% extends 'cws/base.html' %}
+{% block content %}
+
+<div class="container" align="center">
+  <form method="POST">
+    {% csrf_token %}
+    <a href="{% url 'cws:index' %}"><button type="button" class="btn btn-warning" value="New Board">New Board</button></a>
+    <a href="{% url 'cws:print_view' %}" target="_blank"><button type="button" class="btn btn-warning" value="Print Board">Print Board</button></a>
+    &nbsp;&nbsp;&nbsp;Save Board:
+    <input type="submit" class="btn btn-warning board_options" name="submit" value="Text Grid">
+    <input type="submit" class="btn btn-warning board_options" name="submit" value="Excel Grid">
+    &nbsp;&nbsp;&nbsp;Save Key:
+    <input type="submit" class="btn btn-warning board_options" name="submit" value="Text Key">
+    <input type="submit" class="btn btn-warning board_options" name="submit" value="Excel Key">
+  </form>
+  </div>
+<p></p>
+<div class="container game_name">
+<h3>{{ wc }}</h3>
+</div>
+<div class="container">
+    <div class="row">
+      <div class="col-2">
+        <h6 class="game_name">Your Words:</h6>
+        {% for word in word_list %}
+        {{ word }} <br>
+        {% endfor %}
+        <p></p>
+        <!-- <p><a href="{% url 'cws:print_view' %}" target="_blank"><button type="button" class="btn btn-warning" value="Print Board">Print Board</button></a></p>
+        <form method="POST">
+          {% csrf_token %} -->
+          <!-- <p><input type="submit" class="btn btn-warning" name="submit" value="Save Words"></p> -->
+          <!-- <p><input type="submit" class="btn btn-warning" id="save_board" name="submit" value="Save Board"></p> -->
+          <!-- <p>Save Board:</p>
+          <p><input type="submit" class="btn btn-warning board_options" name="submit" value="Text Grid"></p>
+          <p><input type="submit" class="btn btn-warning board_options" name="submit" value="Excel Grid"></p>
+          <p>Save Key:</p>
+          <p><input type="submit" class="btn btn-warning board_options" name="submit" value="Text Key"></p>
+          <p><input type="submit" class="btn btn-warning board_options" name="submit" value="Excel Key"></p>
+        </form> -->
+      </div>
+
+
+      <div class="col-10 game_board" align="center">
+
+        {% for item in grid_map_template %}
+        {{ item|safe }}
+        {% endfor %}
+
+       </div>
+    </div>
+</div>
+
+
+{% endblock %}

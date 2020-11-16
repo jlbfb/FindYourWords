@@ -1,0 +1,25 @@
+{% extends 'cws/base.html' %}
+{% block content %}
+
+<p>Search Name: {{ wc }}</p>
+<p>Difficulty: {{ difficulty|add:"1" }}</p>
+
+<p>Your words:</p>
+<div class="container">
+{% for word in word_list %}
+{{ word }}<br>
+{% endfor %}
+</div>
+<br>
+<p>To change any of your words, click <a href="{% url 'cws:update' %}">here</a>.</p>
+<form method="POST">
+    {% csrf_token %}
+    <p>
+    <label for="grid_size">Set search grid size (between {{ min_grid_size }} and 50):</label>
+    <input type="number" id="grid_size" name="grid_size" min="{{ min_grid_size }}" max="50" value="25" required>
+    </p>
+    <p><input type="submit" class="btn btn-warning" value="Build Word Search!"><span id="wait_build_board"></span></p>
+</form>
+
+
+{% endblock %}

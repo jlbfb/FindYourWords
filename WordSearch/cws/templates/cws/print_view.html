@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+{% load static %}
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ title }}</title>
+
+    <!-- CDN Bootstrap -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+
+    <!-- CDN Bootstrap Javascript -->
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+
+    <!-- Custom Font from fonts.google.com -->
+
+    <link rel="stylesheet" href="{% static 'css/word_search.css' %}">
+
+
+</head>
+<body>
+  
+
+<div class="container game_name">
+<h2>Find Your Words:&nbsp;{{ wc }}</h2>
+</div>
+{% if grid_size >= 45 %}
+  <div class="container">
+{% elif grid_size >= 35 %}
+  <div class="container print_35">
+{% elif grid_size >= 25 %}
+  <div class="container print_25">
+{% else %}
+  <div class="container print_0">
+{% endif %}
+    <div class="row">
+      <div class="col-2">
+        <h5 class="game_name">Your Words:</h5>
+        {% for word in word_list %}
+        {{ word }} <br>
+        {% endfor %}
+
+      </div>
+
+
+      <div class="col-10 game_board" align="center">
+
+        {% for item in grid_map_template %}
+        {{ item|safe }}
+        {% endfor %}
+
+       </div>
+    </div>
+</div>
+</body>
+<script type="text/javascript">
+    window.onload = function() { window.print(); }
+</script>
