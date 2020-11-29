@@ -1,6 +1,13 @@
 {% extends 'cws/base.html' %}
 {% block content %}
 
+{% if build_fail %}
+    <span class="warning">
+    We could not build your board with the current settings.<br>
+    Please increase your grid size or change some of your words.<br><br>
+    </span>
+{% endif %}
+
 <p>Search Name: {{ wc }}</p>
 <p>Difficulty: {{ difficulty|add:"1" }}</p>
 
