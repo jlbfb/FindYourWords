@@ -142,19 +142,27 @@ def diff_and_dir(difficulty, word_set):
     return word_set
 
 @timer
-def word_placer(word_set, grid, grid_map):
+def word_placer(word_set, grid, grid_map, difficulty):
     """
     Determine the position of the search words within the grid
     """
     count = 0
+    total_conflicts = 0
     while count < len(word_set):
         print(f'Count = {count}')
         conflict = 0
         while True:
             cross = 0
             if conflict >= 20:
-                logger.info(f'Crossing word conflict: {conflict}')
-                grid_builder(grid)
+                # logger.info(f'Crossing word conflict: {conflict}')
+                total_conflicts += 1
+                if total_conflicts >= 50:
+                    return 'CannotBuild'
+                if total_conflicts % 5 == 0:
+                    logger.info(f'Total Conflicts: {total_conflicts}')
+                    # total_conflicts = 0
+                    word_set = diff_and_dir(difficulty, word_set)
+                grid_map = grid_builder(grid)
                 count = 0
                 break
             this_word = word_set[count]['word']
@@ -162,17 +170,19 @@ def word_placer(word_set, grid, grid_map):
             x_dir = word_set[count]['dir'][1]
             y_dir = word_set[count]['dir'][2]
             if x_dir > 0:
-                start_x = randint(0, grid - word_len - 1)
+                start_x = randint(0, grid - word_len) # - 1)
             elif x_dir < 0:
                 start_x = randint(word_len - 1, grid - 1)
             else:
                 start_x = randint(0, grid - 1)
             if y_dir > 0:
-                start_y = randint(0, grid - word_len - 1)
+                start_y = randint(0, grid - word_len) # - 1)
             elif y_dir < 0:
                 start_y = randint(word_len - 1, grid-1)
             else:
                 start_y = randint(0, grid - 1)
+            # print(f'Grid: {grid}')
+            # print(f'Grid Map:  {grid_map}')
             print(f'start_x:{start_x}, start_y:{start_y}, x_dir:{x_dir},'
                 f'y_dir:{y_dir}, word_len:{word_len}, grid:{grid}')
             print(f'x ending space: {start_x + (x_dir * (word_len - 1))}')
@@ -251,11 +261,11 @@ def grid_map_for_template(grid, grid_map):
     return grid_map_template
 
 @timer
-def grid_map_export_txt(grid, grid_map, word_collection, word_list, key = 'N'):
+def grid_map_export_txt(grid, grid_map, word_collection, wc2, word_list, key = 'N'):
     if key == 'Y':
-        text_file = word_collection + '_Key.txt'
+        text_file = f'./media/grids/{wc2}_Key.txt'
     else:
-        text_file = word_collection + '.txt'
+        text_file = f'./media/grids/{wc2}.txt'
     with open(text_file, 'w') as f:
         f.write(f'Word Search\n{word_collection}\n\n')
         for i in range(0,grid):
@@ -275,7 +285,7 @@ def grid_map_export_txt(grid, grid_map, word_collection, word_list, key = 'N'):
     print('Done')
 
 @timer
-def grid_map_export_excel(grid, grid_map, word_collection, word_list, key = 'N'):
+def grid_map_export_excel(grid, grid_map, word_collection, wc2, word_list, key = 'N'):
     cell_ctr = Alignment(horizontal='center')
     wb = Workbook()
     ws = wb.active
@@ -318,9 +328,9 @@ def grid_map_export_excel(grid, grid_map, word_collection, word_list, key = 'N')
         #     wb.save(tmp.name)
         #     tmp.seek(0)
         #     stream = tmp.read()
-        wb.save(f'./grids/{word_collection}_Key.xlsx')
+        wb.save(f'./media/grids/{wc2}_Key.xlsx')
     else:
-        wb.save(f'{word_collection}.xlsx')
+        wb.save(f'./media/grids/{wc2}.xlsx')
     print('Done')
 
 @timer
