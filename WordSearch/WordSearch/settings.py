@@ -28,7 +28,7 @@ SECRET_KEY = secret_key
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['jlbfb1.pythonanywhere.com']
 
 
 # Application definition
@@ -122,6 +122,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/2.0/howto/static-files/
 
 STATIC_URL = '/static/'
+STATIC_ROOT = '/home/jlbfb1/FindYourWords/WordSearch/cws'
 
 LOGGING = {  # logging.config.dictConfig
     'version': 1,
