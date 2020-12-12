@@ -1,6 +1,12 @@
 {% extends 'cws/base.html' %}
 {% block content %}
 
+Click the button below to download your saved game board!<br>
+<a href="{{ MEDIA_URL }}grids/{{ file_name }}" download="{{ file_name }}">
+    <button class="btn btn-warning board_options" name="download" value="Download File">Download</button>
+</a>
+<br>
 
+<a href="{% url 'cws:dboard' %}">Return</a> to board<br>
 
 {% endblock %}

@@ -25,12 +25,15 @@
 <div class="container game_name">
 <h2>Find Your Words:&nbsp;{{ wc }}</h2>
 </div>
+<br>
 {% if grid_size >= 45 %}
   <div class="container">
 {% elif grid_size >= 35 %}
   <div class="container print_35">
 {% elif grid_size >= 25 %}
   <div class="container print_25">
+{% elif grid_size >= 15 %}
+  <div class="container print_15">
 {% else %}
   <div class="container print_0">
 {% endif %}

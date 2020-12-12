@@ -1,4 +1,4 @@
-import logging, pickle, re
+import logging, os, pickle, re
 from django.shortcuts import render
 from django.http import HttpResponseRedirect, HttpResponse
 from .forms import WordsForm, WordCollectionForm, WordForm
@@ -63,7 +63,7 @@ def index(request, update=''):
         if 'update' in path:
             current_words = request.session['word_list']
             wc = request.session['wc']
-            difficulty = request.session['difficulty']
+            difficulty = request.session['difficulty'] + 1
             for word in current_words:
                 word_list = word_list + f'{word}\n'
             print(f'This is the word list: {word_list}')
@@ -85,6 +85,8 @@ def index(request, update=''):
 def verify(request):
 
     wc = request.session['wc']
+    wc2 = wc.replace(' ','_')
+    request.session['wc2'] = wc2
     word_list = request.session['word_list']
     difficulty = request.session['difficulty']
 
@@ -92,7 +94,15 @@ def verify(request):
     pickled_word_set = pickle.dumps(word_set).hex()
     request.session['word_set'] = pickled_word_set
     long_word = word_set[0]['word']
-    min_grid_size = len(long_word) + int(len(word_set) * .6)
+    if difficulty < 3:
+        if len(long_word) > len(word_set):
+            min_grid_size = len(long_word)
+        else:
+            min_grid_size = len(word_set)
+    elif difficulty < 6:
+        min_grid_size = len(long_word) + int(len(word_set) * .3)
+    else:
+        min_grid_size = len(long_word) + int(len(word_set) * .6)
 
     if request.method == 'POST':
         # details = request.POST
@@ -109,12 +119,17 @@ def verify(request):
         'difficulty': difficulty,
         'min_grid_size': min_grid_size,
     }
+    try:
+        build_fail = request.session['build_fail']
+        context['build_fail'] = build_fail
+        request.session['build_fail'] = 0
+    except:
+        pass
     template = 'cws/verify.html'
     return render(request, template, context)
 
 def grid(request):
 
-    word_list = request.session['word_list']
     difficulty = request.session['difficulty']
     grid_size = request.session['grid_size']
     pickled_word_set = request.session['word_set']
@@ -122,7 +137,14 @@ def grid(request):
     # word_set = word_collector(word_list)
     word_set = diff_and_dir(difficulty, word_set)
     grid_map = grid_builder(grid_size)
-    grid_map = word_placer(word_set, grid_size, grid_map)
+    # logger.info(f'Grid Map starts as: {grid_map}')
+    grid_map = word_placer(word_set, grid_size, grid_map, difficulty)
+    if grid_map == 'CannotBuild':
+        word_list = request.session['word_list']
+        logger.info(f'Could not build (Grid: {grid_size}, '
+            f'Diff: {difficulty}): {word_list}')
+        request.session['build_fail'] = 1
+        return HttpResponseRedirect('verify')    
     # Print grid map
     grid_map_display(grid_size, grid_map)
     grid_map = grid_filler(word_set, grid_size, difficulty, grid_map)
@@ -135,6 +157,7 @@ def grid(request):
 def board(request):
 
     wc = request.session['wc']
+    wc2 = request.session['wc2']
     word_list = request.session['word_list']
     grid_size = request.session['grid_size']
     grid_map = request.session['grid_map']
@@ -150,13 +173,17 @@ def board(request):
                 Word.objects.create(word_collections = word_collection, word = search_word)
                 print(f'Saved: {search_word}')
         elif 'Text Grid' in options:
-            grid_map_export_txt(grid_size, grid_map, wc, word_list)
+            grid_map_export_txt(grid_size, grid_map, wc, wc2, word_list)
+            request.session['file_name'] = f'{wc2}.txt'
         elif 'Text Key' in options:
-            grid_map_export_txt(grid_size, grid_map, wc, word_list, key='Y')
+            grid_map_export_txt(grid_size, grid_map, wc, wc2, word_list, key='Y')
+            request.session['file_name'] = f'{wc2}_Key.txt'
         elif 'Excel Grid' in options:
-            grid_map_export_excel(grid_size, grid_map, wc, word_list)
+            grid_map_export_excel(grid_size, grid_map, wc, wc2, word_list)
+            request.session['file_name'] = f'{wc2}.xlsx'
         elif 'Excel Key' in options:
-            grid_map_export_excel(grid_size, grid_map, wc, word_list, key='Y')
+            grid_map_export_excel(grid_size, grid_map, wc, wc2, word_list, key='Y')
+            request.session['file_name'] = f'{wc2}_Key.xlsx'
 
         return HttpResponseRedirect('download')
 
@@ -190,8 +217,16 @@ def print_view(request):
     return render(request, template, context)
 
 def download(request):
+    file_name = request.session['file_name']
     context = {
-        'title': 'Save Your Board',
+        'title': 'Download Your Board',
+        'file_name': file_name
     }
     template = 'cws/download.html'
     return render(request, template, context)
+
+def delete_board(request):
+    file_name = request.session['file_name']
+    os.remove(f'./media/grids/{file_name}')
+
+    return HttpResponseRedirect('board')
