@@ -1,9 +1,9 @@
 from django.urls import path, include
-from .views import (index, 
-                    grid, 
-                    verify, 
-                    board, 
-                    print_view, 
+from .views import (index,
+                    grid,
+                    verify,
+                    board,
+                    print_view,
                     download,
                     delete_board)
 
