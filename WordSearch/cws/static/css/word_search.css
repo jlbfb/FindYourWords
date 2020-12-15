@@ -13,6 +13,9 @@ h1 {
 .game_board {
     align-items: center;
     align-content: center;
+    font-family: 'Overpass Mono', 'sans-serif';
+    /* line-height: .8em;
+    letter-spacing: .05em; */
 }
 
 .game_name {
@@ -26,21 +29,41 @@ h1 {
 
 .print_0 {
     font-size: 2.0em;
+    line-height: 1.4em;
+    letter-spacing: .8em;
 }
 
 .print_15 {
     font-size: 1.8em;
+    line-height: 1em;
+    letter-spacing: .3em;
 }
 
 .print_25 {
-    font-size: 1.5em;   
+    font-size: 1.6em;
+    line-height: .9em;
+    letter-spacing: .14em;
 }
 
 .print_35 {
-    font-size: 1.2em;   
+    font-size: 1.4em;
+    line-height: .9em;
+    letter-spacing: .08em;   
+}
+
+.print_45 {
+    font-size: 1.2em;
+    line-height: .8em;
+    letter-spacing: .08em;   
 }
 
 .warning {
     color: red;
     font-size: 1.1em;
+}
+
+.word_list {
+    font-size: 1.2em;
+    /* line-height: 1em; */
+    /* letter-spacing: .8em; */
 }

@@ -16,6 +16,7 @@
     <!-- Custom Font from fonts.google.com -->
 
     <link rel="stylesheet" href="{% static 'css/word_search.css' %}">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Overpass+Mono">
 
 
 </head>
@@ -26,34 +27,36 @@
 <h2>Find Your Words:&nbsp;{{ wc }}</h2>
 </div>
 <br>
-{% if grid_size >= 45 %}
-  <div class="container">
-{% elif grid_size >= 35 %}
-  <div class="container print_35">
-{% elif grid_size >= 25 %}
-  <div class="container print_25">
-{% elif grid_size >= 15 %}
-  <div class="container print_15">
-{% else %}
-  <div class="container print_0">
-{% endif %}
+<div class="container">
     <div class="row">
       <div class="col-2">
         <h5 class="game_name">Your Words:</h5>
+        <div class="word_list">
         {% for word in word_list %}
-        {{ word }} <br>
+        {{ word }}<br>
         {% endfor %}
-
+        </div>
       </div>
 
+      <div class="col-10" align="center">
+        {% if grid_size >= 45 %}
+          <div class="game_board print_45">
+        {% elif grid_size >= 35 %}
+          <div class="game_board print_35">
+        {% elif grid_size >= 25 %}
+          <div class="game_board print_25">
+        {% elif grid_size >= 15 %}
+          <div class="game_board print_15">
+        {% else %}
+          <div class="game_board print_0">
+        {% endif %}
 
-      <div class="col-10 game_board" align="center">
+          {% for item in grid_map_template %}
+          {{ item|safe }}
+          {% endfor %}
 
-        {% for item in grid_map_template %}
-        {{ item|safe }}
-        {% endfor %}
-
-       </div>
+          </div>
+      </div>
     </div>
 </div>
 </body>
