@@ -2,3 +2,12 @@
 **/*.txt
 **/__pycache__
 **/*.pyc
+**/*.ttf
+**/*.db
+**/*.ipynb
+**/fyw_secrets.py
+**/*.sqlite3
+**/logs
+**/build
+**/dist
+**/*.spec
