@@ -1,4 +1,5 @@
 import logging, os, pickle, re
+from django.conf import settings
 from django.shortcuts import render
 from django.http import HttpResponseRedirect, HttpResponse
 from .forms import WordsForm, WordCollectionForm, WordForm
@@ -24,14 +25,14 @@ logger = logging.getLogger(__name__)
 def index(request, update=''):
     word_list = ''
     difficulty = ''
-        
+
     if request.method == 'POST':
         word_collection_form = WordCollectionForm(data=request.POST)
         words_form = WordsForm(data=request.POST)
         # word_form = WordForm()
 
         if word_collection_form.is_valid() and words_form.is_valid():
-            difficulty = int(request.POST['difficulty']) - 1 
+            difficulty = int(request.POST['difficulty']) - 1
             # print(f'These are the details: {details}')
             request.session['difficulty'] = difficulty
             # request.session['grid_size'] = details['grid_size']
@@ -55,7 +56,7 @@ def index(request, update=''):
             return HttpResponseRedirect('verify')
 
         else:
-            print(words_form.errors)  # word_collection_form.errors, 
+            print(words_form.errors)  # word_collection_form.errors,
 
     else:
         path = request.path
@@ -144,7 +145,7 @@ def grid(request):
         logger.info(f'Could not build (Grid: {grid_size}, '
             f'Diff: {difficulty}): {word_list}')
         request.session['build_fail'] = 1
-        return HttpResponseRedirect('verify')    
+        return HttpResponseRedirect('verify')
     # Print grid map
     grid_map_display(grid_size, grid_map)
     grid_map = grid_filler(word_set, grid_size, difficulty, grid_map)
@@ -190,7 +191,7 @@ def board(request):
     else:
         grid_map_template = grid_map_for_template(grid_size, grid_map)
         request.session['grid_map_template'] = grid_map_template
-    
+
     context = {
         'title': 'Find Your Words',
         'wc': wc,
@@ -227,6 +228,6 @@ def download(request):
 
 def delete_board(request):
     file_name = request.session['file_name']
-    os.remove(f'./media/grids/{file_name}')
+    os.remove(f'{settings.MEDIA_ROOT}/grids/{file_name}')
 
     return HttpResponseRedirect('board')

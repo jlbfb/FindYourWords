@@ -1,1 +1,1 @@
-call "D:\Jason Folder\Coding\WordSearch\.venvws\Scripts\activate.bat"
+call "D:\JasonFolder\Coding\WordSearch\.venvws\Scripts\activate.bat"

@@ -29,7 +29,7 @@ SECRET_KEY = secret_key
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['67.61.0.98', '192.168.0.25']
+ALLOWED_HOSTS = []
 
 
 # Application definition
@@ -88,7 +88,6 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-        # 'NAME': '/var/www/searchwords/db/db.sqlite3',
     }
 }
 
@@ -132,15 +131,12 @@ USE_TZ = True
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 STATIC_URL = '/static/'
-# pythonanywhere only:
+# Production only:
 # STATIC_ROOT = '/home/jlbfb1/FindYourWords/WordSearch/cws'
-# JBP_Server:
-STATIC_ROOT = '/var/www/searchwords/static'
 
 MEDIA_URL = '/media/'
-# pythonanywhere only:
+# Production only:
 # MEDIA_ROOT = '/home/jlbfb1/FindYourWords/WordSearch'
-MEDIA_ROOT = '/var/www/searchwords/media'
 
 LOGGING = {  # logging.config.dictConfig
     'version': 1,
