@@ -107,6 +107,10 @@ def verify(request):
     else:
         min_grid_size = len(long_word) + int(len(word_set) * .6)
 
+    # TEST: OVERRIDING MIN GRID SIZE
+    min_grid_size = len(long_word)
+    # END TEST
+
     if request.method == 'POST':
         # details = request.POST
         # print(f'The details: {details}')
