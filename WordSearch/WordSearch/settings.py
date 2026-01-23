@@ -142,7 +142,7 @@ MEDIA_URL = '/media/'
 # MEDIA_ROOT = '/home/jlbfb1/FindYourWords/WordSearch'
 MEDIA_ROOT = '/var/www/searchwords/media'
 
-LOGGING = {  # logging.config.dictConfig
+LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
     'formatters': {
@@ -150,7 +150,8 @@ LOGGING = {  # logging.config.dictConfig
             'format': '%(name)-12s %(levelname)-8s %(message)s'
         },
         'file': {
-            'format': '%(asctime)s %(name)-12s %(levelname)-8s %(message)s'
+            'format': '%(asctime)s %(name)-12s %(levelname)-8s %(message)s',
+            'datefmt': '%d/%b/%Y %H:%M:%S'
         }
     },
     'handlers': {

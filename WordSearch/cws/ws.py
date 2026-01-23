@@ -1,5 +1,6 @@
 import logging, re
 # from wordSearchDB import WordSearchDB
+from collections import defaultdict
 from random import randint
 from openpyxl import Workbook
 from openpyxl.styles import Alignment
@@ -141,6 +142,157 @@ def diff_and_dir(difficulty, word_set):
         word_set[count]['dir'] = directions[int(dir_select)]
         # print(rand_int, dir_select, word_set[count]['dir'])
     return word_set
+
+
+@timer
+def generate_start_positions(word_set, grid_size):
+    """
+    Determine all possible starting spots for all words
+    """
+    space_options = defaultdict(lambda: defaultdict(lambda: defaultdict(list)))
+    potential_placements = defaultdict(lambda: defaultdict(list))
+    count = 0
+    while count < len(word_set):
+        logger.debug(f'Word = {word_set[count]["word"]}')
+        logger.debug(f'Count = {count}')
+        this_word = word_set[count]['word']
+        word_length = len(this_word)
+        x_dir = word_set[count]['dir'][1]
+        y_dir = word_set[count]['dir'][2]
+        x_step = x_dir
+        y_step = y_dir
+        if x_dir > 0:
+            start_x = 0
+            final_x = grid_size - word_length + 1
+        elif x_dir < 0:
+            start_x = grid_size - 1
+            final_x = word_length - 2
+        else:
+            start_x = 0
+            final_x = grid_size
+            x_step = 1
+        if y_dir > 0:
+            start_y = 0
+            final_y = grid_size - word_length +1
+        elif y_dir < 0:
+            start_y = grid_size - 1
+            final_y = word_length - 2
+        else:
+            start_y = 0
+            final_y = grid_size
+            y_step = 1
+        logger.debug(f'Variables:\n'
+                     f'X Dir = {x_dir}\n'
+                     f'X Step = {x_step}\n'
+                     f'Start X = {start_x}\n'
+                     f'Final X = {final_x}\n'
+                     f'Y Dir = {y_dir}\n'
+                     f'Y Step = {y_step}\n'
+                     f'Start Y = {start_y}\n'
+                     f'Final Y = {final_y}'
+                     )
+        # Build the grid space options dictionary
+        x_count = 0
+        y_count = 0
+        start_space = ''
+        for row in range(start_x, final_x, x_step):
+            for col in range(start_y, final_y, y_step):
+                letter_count = 0
+                while letter_count <= word_length:
+                    current_space = f'{row + x_count}-{col + y_count}'
+                    if not start_space:
+                        start_space = current_space
+                    potential_placements[this_word][start_space].append([this_word[letter_count], current_space])
+                    space_options[current_space][f'{this_word[letter_count]}'][this_word].append(start_space)
+                    if letter_count < word_length - 1:
+                        letter_count += 1
+                    else:
+                        start_space = ''
+                        x_count = 0
+                        y_count = 0
+                        break
+                    x_count = x_count + x_dir
+                    y_count = y_count + y_dir
+                col = col + y_dir
+            row = row + x_dir
+        count += 1
+    for k,v in space_options.items():
+        print(f'Space {k}')
+        for vk,vv in v.items():
+            print(f'Letter {vk}: {vv}')
+    # unplaced_words = {
+    #     sorted(unplaced_words.items(), key=lambda spots: len(spots[1]))
+    # }
+    # for k,v in potential_placements.items():
+    #     print(f'Word {k}: Starting spaces: {v}')
+    #     print(f'Count of starting spaces for {k}: {len(v)}')
+    return space_options, potential_placements
+    # This code is in progress
+    """
+    Take the existing code for determining word direction and populate
+    the potential start position dictionary based strictly upon the pre-
+    chosen word direction. This significantly decreases the amount of
+    grid population that needs to be done before starting word placement.
+    """
+
+@timer
+def new_word_placer(space_options, potential_placements, grid_map):
+    available_words = list()
+    placed_words = defaultdict(lambda: defaultdict(list))
+    for word, spaces in potential_placements.items():
+        # available_words = [k for k, v in sorted(unplaced_words.items(), key=lambda item: len(item[1]))]
+        start_options = list()
+        for space in spaces:
+            start_options.append(space)
+        available_words.append([word, start_options, len(spaces)])
+    while available_words:
+        for word in available_words:
+            word[2] = len(word[1])
+        available_words = sorted(available_words, key=lambda x: x[2])
+        logger.debug(f'Sorted: {available_words}')
+        the_word = available_words[0]
+        logger.debug(f'The Word = {the_word}')
+        if not the_word[2]:
+            logger.info(f'The word {the_word[0]} has no place to go')
+            # Add handling for when there are no potential starting spaces
+            grid_map = 'CannotBuild'
+            break
+        random_index = randint(0, the_word[2]-1)
+        random_start = available_words[0][1][random_index]
+        logger.debug(f'Random Index = {random_index}\nRandom Start = {random_start}')
+        logger.debug(potential_placements[the_word[0]][random_start])
+        start_space = potential_placements[the_word[0]][random_start]
+        logger.debug(f'The word: {the_word[0]} starting at {random_start}\nStart Space = {start_space}')
+        placed_words[the_word[0]]['spaces'].append(start_space)
+        placed_words[the_word[0]]['start'].append(random_start)
+        placed_words[the_word[0]]['placed'].append(len(placed_words))
+        placed_words[the_word[0]]['blocked'] = defaultdict(list)
+        placed_words[the_word[0]]['blocked'][word[0]] = (
+            available_words.pop(0)[1]
+        )
+        logger.debug(f'The Word = {the_word}\nAvailable Words = {available_words}')
+        for letter in start_space:
+            grid_map[letter[1]] = letter[0]
+            for index, word in enumerate(available_words):
+                for poss_letter in space_options[letter[1]]:
+                    if space_options[letter[1]][poss_letter] != letter[0]:
+                        for st_space in space_options[letter[1]][poss_letter][word[0]]:
+                            if st_space in word[1]:
+                                available_words[index][1].remove(st_space)
+                                placed_words[the_word[0]]['blocked'][word[0]].append(
+                                    st_space
+                                )
+
+        logger.debug(f'Grid Map: {grid_map}')
+
+        # Need to add check for crossed spaces and remove the blocked starting
+        # spots for the other words from available_words and add them to blocked
+        logger.debug(f'Placed Words = {placed_words}')
+        logger.debug(f'Available Words = {available_words}')
+
+    logger.debug(f'All words have been placed; time to build the grid!')
+    return grid_map
+
 
 @timer
 def word_placer(word_set, grid, grid_map, difficulty):

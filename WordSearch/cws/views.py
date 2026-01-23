@@ -11,6 +11,8 @@ from .ws import (grid_builder,
                 grid_map_display,
                 grid_map_for_template,
                 diff_and_dir,
+                generate_start_positions,
+                new_word_placer,
                 word_placer,
                 word_collector,
                 save_grid_maps,
@@ -139,7 +141,17 @@ def grid(request):
     word_set = diff_and_dir(difficulty, word_set)
     grid_map = grid_builder(grid_size)
     # logger.info(f'Grid Map starts as: {grid_map}')
-    grid_map = word_placer(word_set, grid_size, grid_map, difficulty)
+
+    space_options, potential_placements = (
+        generate_start_positions(word_set, grid_size)
+    )
+    grid_map = new_word_placer(
+        space_options,
+        potential_placements,
+        grid_map,
+    )
+
+    # grid_map = word_placer(word_set, grid_size, grid_map, difficulty)
     if grid_map == 'CannotBuild':
         word_list = request.session['word_list']
         logger.info(f'Could not build (Grid: {grid_size}, '
@@ -153,6 +165,7 @@ def grid(request):
     grid_map_display(grid_size, grid_map)
     request.session['grid_map'] = grid_map
     logger.info(f'The grid map has been created')
+
     return HttpResponseRedirect('board')
 
 def board(request):
