@@ -23,7 +23,7 @@
     {% csrf_token %}
     <p>
     <label for="grid_size">Set search grid size (between {{ min_grid_size }} and 50):</label>
-    <input type="number" id="grid_size" name="grid_size" min="{{ min_grid_size }}" max="50" value="25" required>
+    <input type="number" id="grid_size" name="grid_size" min="{{ min_grid_size }}" max="50" value="{{ min_grid_size }}" required>
     </p>
     <p><input type="submit" class="btn btn-warning" value="Build Word Search!"><span id="wait_build_board"></span></p>
 </form>
