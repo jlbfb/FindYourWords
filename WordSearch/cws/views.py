@@ -1,4 +1,4 @@
-import logging, os, pickle, re
+import logging, os, pickle, re, math
 from django.conf import settings
 from django.shortcuts import render
 from django.http import HttpResponseRedirect, HttpResponse
@@ -17,7 +17,7 @@ from .ws import (grid_builder,
                 word_collector,
                 save_grid_maps,
                 save_collections,
-                load_collections)
+                load_collections,)
 
 
 # This retrieves a Python logging instance (or creates it)
@@ -97,19 +97,22 @@ def verify(request):
     pickled_word_set = pickle.dumps(word_set).hex()
     request.session['word_set'] = pickled_word_set
     long_word = word_set[0]['word']
-    if difficulty < 3:
-        if len(long_word) > len(word_set):
-            min_grid_size = len(long_word)
-        else:
-            min_grid_size = len(word_set)
-    elif difficulty < 6:
-        min_grid_size = len(long_word) + int(len(word_set) * .3)
-    else:
-        min_grid_size = len(long_word) + int(len(word_set) * .6)
 
-    # TEST: OVERRIDING MIN GRID SIZE
-    min_grid_size = len(long_word)
-    # END TEST
+    # Determine minimum grid size
+    char_total = 0
+    for _, words in word_set.items():
+        char_total = char_total + len(words['word'])
+    logger.debug(f'Total characters for all words: {char_total}')
+    square_minimum = math.sqrt(char_total)
+    frac, whole = math.modf(square_minimum)
+    logger.debug(f'Sq Min = {square_minimum}: {whole} + {frac}')
+    if not frac or frac > .5:
+        minimum_root = int(whole + 2)
+    else:
+        minimum_root = math.floor(square_minimum) + 1
+    logger.debug(f'Math Check: Sq Min = {square_minimum} and Min Root = {minimum_root}')
+    min_grid_size = (len(long_word) if len(long_word) > minimum_root
+                     else minimum_root)
 
     if request.method == 'POST':
         # details = request.POST
@@ -153,6 +156,8 @@ def grid(request):
         space_options,
         potential_placements,
         grid_map,
+        word_set,
+        grid_size,
     )
 
     # grid_map = word_placer(word_set, grid_size, grid_map, difficulty)
