@@ -166,20 +166,20 @@ def generate_start_positions(word_set, grid_size):
         word_length = len(this_word)
 
         # TESTING
-        # if word_set[count]['word'].lower() == 'banananas':
-        #     x_dir = 1
-        #     y_dir = 0
-        # elif word_set[count]['word'].lower() == 'ballerina':
-        #     x_dir = 1
-        #     y_dir = 1
-        # elif word_set[count]['word'].lower() == 'balaclava':
-        #     x_dir = 1
-        #     y_dir = 0
-        # else:
+        if word_set[count]['word'].lower() == 'banananas':
+            x_dir = 0
+            y_dir = 1
+        elif word_set[count]['word'].lower() == 'badderina':
+            x_dir = 1
+            y_dir = 1
+        elif word_set[count]['word'].lower() == 'balaclava':
+            x_dir = 0
+            y_dir = 1
+        else:
         # End TESTING
 
-        x_dir = word_set[count]['dir'][1]
-        y_dir = word_set[count]['dir'][2]
+            x_dir = word_set[count]['dir'][1]
+            y_dir = word_set[count]['dir'][2]
         x_step = x_dir
         y_step = y_dir
         if x_dir > 0:
@@ -249,13 +249,7 @@ def generate_start_positions(word_set, grid_size):
     #     print(f'Word {k}: Starting spaces: {v}')
     #     print(f'Count of starting spaces for {k}: {len(v)}')
     return space_options, potential_placements
-    # This code is in progress
-    """
-    Take the existing code for determining word direction and populate
-    the potential start position dictionary based strictly upon the pre-
-    chosen word direction. This significantly decreases the amount of
-    grid population that needs to be done before starting word placement.
-    """
+
 
 @timer
 def new_word_placer(space_options, potential_placements, grid_map):
@@ -273,7 +267,7 @@ def new_word_placer(space_options, potential_placements, grid_map):
         logger.debug(f'Sorted: {available_words}')
         the_word = available_words[0]
         logger.debug(f'The Word = {the_word}')
-        bad_word_count = 0
+        # bad_word_count = 0
         if not the_word[2]:
             while True:
                 logger.info(f'***** The word {the_word[0]} has no place to go *****')
@@ -315,14 +309,14 @@ def new_word_placer(space_options, potential_placements, grid_map):
                             if keep_letter: break
                         if keep_letter: break
                     if not keep_letter:
-                        grid_map[letter[1]] = '.'
+                        grid_map[letter[1]] = ['.', 0]
                 logger.debug(f'Grid Map now: {grid_map}')
                 if not the_word[2]:
                     # TODO: If the words cannot be placed and placement_order is empty,
                     # need to run the most challenging word back through generate_start_position()
-                    if bad_word_count < 3 and placement_order:
-                        bad_word_count += 1
-                    else:
+                    if not placement_order:
+                        # bad_word_count += 1
+                        # else:
                         grid_map = 'CannotBuild'
                         logger.info('Cannot build a board for this word list')
                         return grid_map
@@ -348,24 +342,16 @@ def new_word_placer(space_options, potential_placements, grid_map):
         )
         # logger.debug(f'The Word = {the_word}\nAvailable Words = {available_words}')
         for letter in used_spaces:
-            grid_map[letter[1]] = letter[0]
+            grid_map[letter[1]] = [letter[0], 1]
             for index, word in enumerate(available_words):
                 for poss_letter in space_options[letter[1]]:
                     if poss_letter != letter[0]:
                         for st_space in space_options[letter[1]][poss_letter][word[0]]:
                             if st_space in word[1]:
-                                # if word[0][0] == letter[0]:
-                                #     logger.debug(f'First letter of {word[0]} is {word[0][0]}; looking for {letter[0]}')
-                                # if letter[1] == st_space:
-                                #     logger.debug(f'Space {letter[1]} matches {st_space}')
-                                if word[0][0] == letter[0] and st_space == letter[1]:
-                                    logger.debug(f'Skipping the block for {letter[1]} and {letter[0]}')
-                                    continue
-                                else:
-                                    available_words[index][1].remove(st_space)
-                                    placed_words[the_word[0]]['blocked'][word[0]].append(
-                                        st_space
-                                    )
+                                available_words[index][1].remove(st_space)
+                                placed_words[the_word[0]]['blocked'][word[0]].append(
+                                    st_space
+                                )
 
         logger.debug(f'Grid Map: {grid_map}')
         logger.debug(f'Placed Words = {placed_words}')
