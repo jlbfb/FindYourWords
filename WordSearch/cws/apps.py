@@ -6,7 +6,6 @@ class CwsConfig(AppConfig):
     name = 'cws'
     verbose_name = 'Find Your Words'
 
+
 class MyAdminConfig(AdminConfig):
     default_site = 'cws.admin.MyAdminSite'
-
-

@@ -1,15 +1,15 @@
+# flake8: noqa
+
 # from django.conf import settings
 from django.contrib import admin
 from django.utils.html import mark_safe
-
-# Register your models here.
-
 from .models import (
-                    Word,
-                    WordCollection,
-                    CollectionGrid,
-                    GridMap,
+    Word,
+    WordCollection,
+    CollectionGrid,
+    GridMap,
 )
+
 
 class WordInline(admin.TabularInline):
     # This class brings the linked words into the Word Collection
@@ -26,6 +26,7 @@ class WordInline(admin.TabularInline):
     # Use fk_name when there is more than one foreign key in the model
     fk_name = 'word_collections'
 
+
 class WordAdmin(admin.ModelAdmin):
     search_fields = ['word', 'word_collections__word_collection']
     # raw_id_fields = ['word_collections']
@@ -38,19 +39,20 @@ class WordAdmin(admin.ModelAdmin):
 
     class Meta:
         model = Word
-    
+
+
 class WordCollectionAdmin(admin.ModelAdmin):
     search_fields = ['word_collection']
 
     class Meta:
         model = WordCollection
 
-    # This inlines reference is used to pull the linked words from Word 
+    # This inlines reference is used to pull the linked words from Word
     # model into the Word Collection admin pages
     inlines = [WordInline,]
 
-# class CollectionGridAdmin(admin.ModelAdmin):
 
+# class CollectionGridAdmin(admin.ModelAdmin):
 
 
 class MyAdminSite(admin.AdminSite):
@@ -61,6 +63,7 @@ class MyAdminSite(admin.AdminSite):
             # add later
         ]
         return urlpatterns
+
 
 admin.site = MyAdminSite()
 

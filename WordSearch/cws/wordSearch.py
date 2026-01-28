@@ -1,4 +1,7 @@
-import logging, re
+# flake8: noqa
+
+import logging
+import re
 # from wordSearchDB import WordSearchDB
 from django.http import HttpResponse
 from random import randint
@@ -53,6 +56,7 @@ def timer(fn):
         return call_func
     return calculate
 
+
 '''
 def word_collector(n: int):
     """
@@ -93,6 +97,7 @@ def word_collector(n: int):
     return word_set
 '''
 
+
 def change_word():
     global word_list
     global changed_words
@@ -130,6 +135,7 @@ def change_word():
             break
     return
 
+
 def grid_builder(grid: int):
     """
     Builds the grid map based upon the selected grid size
@@ -141,6 +147,7 @@ def grid_builder(grid: int):
             grid_map[f'{i}-{j}'] = '.'
     print('Grid built')
     return grid_map
+
 
 '''
 def integer_check(fn: str, num: int):
@@ -157,9 +164,10 @@ def integer_check(fn: str, num: int):
     return fn(num)
 '''
 
+
 def diff_and_dir():
     """
-    Set word direction based upon the chosen difficulty level 
+    Set word direction based upon the chosen difficulty level
     """
     randomizer = str()
     # print(diff_dir)
@@ -172,6 +180,7 @@ def diff_and_dir():
         dir_select = randomizer[rand_int]
         word_set[count]['dir'] = directions[int(dir_select)]
         # print(rand_int, dir_select, word_set[count]['dir'])
+
 
 @timer
 def word_placer():
@@ -217,7 +226,7 @@ def word_placer():
                         letters[char] = grid_map[f'{start_x + (x_dir * char)}'
                             f'-{start_y + (y_dir * char)}']
                     for char in range(0, word_len):
-                        if (letters[char] != '.' 
+                        if (letters[char] != '.'
                                 and letters[char] != this_word[char]):
                             cross = 1
                             conflict += 1
@@ -240,6 +249,7 @@ def word_placer():
                     f" does not fit from x{start_x}")
     return grid_map
 
+
 @timer
 def grid_filler():
     word_chars = str()
@@ -249,13 +259,13 @@ def grid_filler():
         for j in range(0, grid):
             global grid_map
             char_picker = randint(0,99)
-            char_picker = ('alpha' if char_picker < diff_fill[difficulty][0] 
+            char_picker = ('alpha' if char_picker < diff_fill[difficulty][0]
                 else 'words')
             # print(char_picker, word_chars)
             rand_char = (randint(0,len(word_chars)-1) if char_picker == 'words'
                 else randint(65,90))
             # print(rand_char)
-            rand_char = (chr(rand_char) if char_picker == 'alpha' 
+            rand_char = (chr(rand_char) if char_picker == 'alpha'
                 else word_chars[rand_char].upper())
             try:
                 if grid_map[f'{i}-{j}'][1] == 1:
@@ -270,6 +280,7 @@ def grid_map_display():
         for j in range(0,grid):
             print(grid_map[f'{i}-{j}'][0], end = '')
     print()
+
 
 @timer
 def grid_map_export_txt(key = 'N'):
@@ -326,7 +337,7 @@ def grid_map_export_excel(key = 'N'):
                 ).alignment = cell_ctr
             curr_col += 1
     curr_row += 1
-    ws.merge_cells(start_row=curr_row, start_column=1, 
+    ws.merge_cells(start_row=curr_row, start_column=1,
         end_row=curr_row, end_column=grid)
     for word in word_list:
         curr_row += 1
@@ -339,33 +350,35 @@ def grid_map_export_excel(key = 'N'):
         wb.save(f'{word_collection}.xlsx')
     print('Done')
 
+
 @timer
 def save_collections():
     global this_key
     global word_collection
     while True:
         try:
-            tw.insert_table('Word_Collections', 
+            tw.insert_table('Word_Collections',
                 word_collection = (word_collection,))
-            this_key = tw.get_key('Word_Collections', id_ = 'id', 
+            this_key = tw.get_key('Word_Collections', id_ = 'id',
                 identifier = 'word_collection', value = word_collection)[0]
             for w in range(0, len(word_set)):
-                if w == len(word_set) - 1: 
+                if w == len(word_set) - 1:
                     loop = 'last'
                 else:
                     loop = 'next'
-                tw.insert_table('Words', word_collections_id = this_key, 
+                tw.insert_table('Words', word_collections_id = this_key,
                     word = word_set[w]['word'], loop = loop)
             break
-        except Exception as e: 
+        except Exception as e:
             print(e)
             word_collection = input('Please enter another name for the '
                 'collection: ')
 
+
 @timer
 def save_grid_maps():
     this_grid = tw.get_key('Grid_Maps', id_ = 'grid_maps_id')
-    if this_grid == []: 
+    if this_grid == []:
         this_grid = 1
     else:
         this_grid = max(this_grid)
@@ -374,15 +387,18 @@ def save_grid_maps():
     print(this_grid)
     for i in range(0, grid):
         for j in range(0, grid):
-            if j == grid - 1: 
+            if j == grid - 1:
                 loop = 'last'
             else:
                 loop = 'next'
-            tw.insert_table('Grid_Maps', loop = loop, grid_maps_id = this_grid,
-                cell = f'{i}-{j}', letter = grid_map[f'{i}-{j}'][0], 
-                word_key = grid_map[f'{i}-{j}'][1])
+            tw.insert_table(
+                'Grid_Maps', loop = loop, grid_maps_id = this_grid,
+                cell = f'{i}-{j}', letter = grid_map[f'{i}-{j}'][0],
+                word_key = grid_map[f'{i}-{j}'][1]
+            )
     tw.insert_table('Collection_Grid', word_collections_id = this_key,
         grid_maps_id = this_grid, difficulty = difficulty, grid_size = grid)
+
 
 def load_collections():
     global word_list
@@ -396,7 +412,7 @@ def load_collections():
         if re.match('^[0-9]{1,2}$', collection):
             try:
                 collection = int(collection)
-                words = tw.get_data('Words', columns = '*', 
+                words = tw.get_data('Words', columns = '*',
                     condition = f"word_collections_id = \'{collection}\'")
                 print(f'Words in the {collection_list[collection - 1][1]} '
                     'Collection:')
@@ -411,14 +427,16 @@ def load_collections():
     change_word()
     if changed_words != []:
         for change in changed_words:
-            # print(f'change = {change}, collection = {collection_list[collection - 1][1]},'
+            # print(
+            #     f'change = {change}, collection = '
+            #     f'{collection_list[collection - 1][1]},'
             #     f' new word = {word_list[change]}')
-            tw.update_data('Words', word = word_list[change], 
+            tw.update_data('Words', word = word_list[change],
                 id = words[change][0])
             print(f'Replaced {words[change][0]} with {word_list[change]}')
     else:
         print('No changes made.')
-    
+
 
 # Start of script
 
@@ -461,26 +479,36 @@ grid_filler()
 
 grid_map_display()
 
-export = input(f'Export {word_collection} Word Search to text file (Y/N)? ')
+export = input(
+    f'Export {word_collection} Word Search to text file (Y/N)? '
+)
 if re.match('^[yY]{1,1}$', export):
     grid_map_export_txt()
 
-export_key = input(f'Export Key for {word_collection} Word Search to text '
-    f'file (Y/N)? ')
+export_key = input(
+    f'Export Key for {word_collection} Word Search to text '
+    f'file (Y/N)? '
+)
 if re.match('^[yY]{1,1}$', export):
     grid_map_export_txt(key = 'Y')
 
-export = input(f'Export {word_collection} Word Search to Excel file (Y/N)? ')
+export = input(
+    f'Export {word_collection} Word Search to Excel file (Y/N)? '
+)
 if re.match('^[yY]{1,1}$', export):
     grid_map_export_excel()
 
-export_key = input(f'Export Key for {word_collection} Word Search to Excel '
-    f'file (Y/N)? ')
+export_key = input(
+    f'Export Key for {word_collection} Word Search to Excel '
+    f'file (Y/N)? '
+)
 if re.match('^[yY]{1,1}$', export_key):
     grid_map_export_excel(key = 'Y')
 
-save_collection = input(f'Save {word_collection} Word Collection to database '
-    '(Y/N)? ')
+save_collection = input(
+    f'Save {word_collection} Word Collection to database '
+    '(Y/N)? '
+)
 if re.match('^[yY]{1,1}$', save_collection):
     save_collections()
     save_grid_map = input(f'Save {word_collection} Word Search puzzle to '
@@ -488,8 +516,9 @@ if re.match('^[yY]{1,1}$', save_collection):
     if re.match('^[yY]{1,1}$', save_grid_map):
         save_grid_maps()
 
-load_collection = input('Would you like to load an existing Word Collection '
-    '(Y/N)? ')
+load_collection = input(
+    'Would you like to load an existing Word Collection (Y/N)? '
+)
 if re.match('^[yY]{1,1}$', load_collection):
     load_collections()
 

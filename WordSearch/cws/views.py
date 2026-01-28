@@ -1,27 +1,34 @@
-import logging, os, pickle, re, math
+import logging
+import os
+import pickle
+import re
+import math
 from django.conf import settings
 from django.shortcuts import render
-from django.http import HttpResponseRedirect, HttpResponse
-from .forms import WordsForm, WordCollectionForm, WordForm
+from django.http import HttpResponseRedirect
+from .forms import WordsForm, WordCollectionForm
 from .models import Word, WordCollection
-from .ws import (grid_builder,
-                grid_filler,
-                grid_map_export_excel,
-                grid_map_export_txt,
-                grid_map_display,
-                grid_map_for_template,
-                diff_and_dir,
-                generate_start_positions,
-                new_word_placer,
-                word_placer,
-                word_collector,
-                save_grid_maps,
-                save_collections,
-                load_collections,)
+from .ws import (
+    grid_builder,
+    grid_filler,
+    grid_map_export_excel,
+    grid_map_export_txt,
+    grid_map_display,
+    grid_map_for_template,
+    diff_and_dir,
+    generate_start_positions,
+    new_word_placer,
+    # word_placer,
+    word_collector,
+    # save_grid_maps,
+    # save_collections,
+    # load_collections,
+)
 
 
 # This retrieves a Python logging instance (or creates it)
 logger = logging.getLogger(__name__)
+
 
 # Create your views here.
 def index(request, update=''):
@@ -45,12 +52,13 @@ def index(request, update=''):
             # word_form = word_form.save(commit=False)
             words = words_form.cleaned_data
             print(f'Cleaned words = {words}')
-            words_sub = re.sub(r'([^a-zA-Z]+)',' ',words['words'])
+            words_sub = re.sub(r'([^a-zA-Z]+)', ' ', words['words'])
             raw_word_list = words_sub.split(' ')
             print(f'Raw Word_list = {raw_word_list}')
             word_list = set()
             for search_word in raw_word_list:
-                if not search_word: continue # Filter blanks
+                if not search_word:
+                    continue  # Filter blanks
                 word_list.add(search_word.upper())
             word_list = sorted(list(word_list))
             print(f'Cleaned Word List = {word_list}')
@@ -70,8 +78,10 @@ def index(request, update=''):
             for word in current_words:
                 word_list = word_list + f'{word}\n'
             print(f'This is the word list: {word_list}')
-            words_form = WordsForm(initial={'words':word_list})
-            word_collection_form = WordCollectionForm(initial={'word_collection': wc})
+            words_form = WordsForm(initial={'words': word_list})
+            word_collection_form = WordCollectionForm(
+                initial={'word_collection': wc}
+            )
         else:
             words_form = WordsForm()
             word_collection_form = WordCollectionForm()
@@ -85,10 +95,11 @@ def index(request, update=''):
     template = 'cws/index.html'
     return render(request, template, context)
 
+
 def verify(request):
 
     wc = request.session['wc']
-    wc2 = wc.replace(' ','_')
+    wc2 = wc.replace(' ', '_')
     request.session['wc2'] = wc2
     word_list = request.session['word_list']
     difficulty = request.session['difficulty']
@@ -110,13 +121,15 @@ def verify(request):
         minimum_root = int(whole + 2)
     else:
         minimum_root = math.floor(square_minimum) + 1
-    logger.debug(f'Math Check: Sq Min = {square_minimum} and Min Root = {minimum_root}')
+    logger.debug(
+        f'Math Check: Sq Min = {square_minimum}; Min Root = {minimum_root}'
+    )
     min_grid_size = (len(long_word) if len(long_word) > minimum_root
                      else minimum_root)
 
     if request.method == 'POST':
         # details = request.POST
-        # print(f'The details: {details}')
+        # logger.debug(f'The details: {details}')
         grid_size = request.POST['grid_size']
         print(f'Grid Size = {grid_size} and Integer: {int(grid_size)}')
         request.session['grid_size'] = int(grid_size)
@@ -133,10 +146,11 @@ def verify(request):
         build_fail = request.session['build_fail']
         context['build_fail'] = build_fail
         request.session['build_fail'] = 0
-    except:
+    except Exception:
         pass
     template = 'cws/verify.html'
     return render(request, template, context)
+
 
 def grid(request):
 
@@ -158,13 +172,14 @@ def grid(request):
         grid_map,
         word_set,
         grid_size,
+        difficulty,
     )
 
     # grid_map = word_placer(word_set, grid_size, grid_map, difficulty)
     if grid_map == 'CannotBuild':
         word_list = request.session['word_list']
         logger.info(f'Could not build (Grid: {grid_size}, '
-            f'Diff: {difficulty}): {word_list}')
+                    f'Diff: {difficulty}): {word_list}')
         request.session['build_fail'] = 1
         return HttpResponseRedirect('verify')
     # Print grid map
@@ -173,9 +188,10 @@ def grid(request):
     # Print grid map
     grid_map_display(grid_size, grid_map)
     request.session['grid_map'] = grid_map
-    logger.info(f'The grid map has been created')
+    logger.info('The grid map has been created')
 
     return HttpResponseRedirect('board')
+
 
 def board(request):
 
@@ -189,23 +205,31 @@ def board(request):
         options = request.POST['submit']
         print(f'Options: {options}')
         if 'Save' in options:
-            word_collection = WordCollection.objects.create(word_collection=wc)
+            word_collection = WordCollection.objects.create(
+                word_collection=wc
+            )
             # wc_id = WordCollection.objects.get(pk=word_collection.pk)
             print(f'Word Collection: {word_collection}-{word_collection.pk}')
             for search_word in word_list:
-                Word.objects.create(word_collections = word_collection, word = search_word)
+                Word.objects.create(
+                    word_collections=word_collection, word=search_word
+                )
                 print(f'Saved: {search_word}')
         elif 'Text Grid' in options:
             grid_map_export_txt(grid_size, grid_map, wc, wc2, word_list)
             request.session['file_name'] = f'{wc2}.txt'
         elif 'Text Key' in options:
-            grid_map_export_txt(grid_size, grid_map, wc, wc2, word_list, key='Y')
+            grid_map_export_txt(
+                grid_size, grid_map, wc, wc2, word_list, key='Y'
+            )
             request.session['file_name'] = f'{wc2}_Key.txt'
         elif 'Excel Grid' in options:
             grid_map_export_excel(grid_size, grid_map, wc, wc2, word_list)
             request.session['file_name'] = f'{wc2}.xlsx'
         elif 'Excel Key' in options:
-            grid_map_export_excel(grid_size, grid_map, wc, wc2, word_list, key='Y')
+            grid_map_export_excel(
+                grid_size, grid_map, wc, wc2, word_list, key='Y'
+            )
             request.session['file_name'] = f'{wc2}_Key.xlsx'
 
         return HttpResponseRedirect('download')
@@ -223,6 +247,7 @@ def board(request):
     template = 'cws/board.html'
     return render(request, template, context)
 
+
 def print_view(request):
     grid_map_template = request.session['grid_map_template']
     wc = request.session['wc']
@@ -239,6 +264,7 @@ def print_view(request):
     template = 'cws/print_view.html'
     return render(request, template, context)
 
+
 def download(request):
     file_name = request.session['file_name']
     context = {
@@ -247,6 +273,7 @@ def download(request):
     }
     template = 'cws/download.html'
     return render(request, template, context)
+
 
 def delete_board(request):
     file_name = request.session['file_name']
