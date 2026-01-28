@@ -5,13 +5,15 @@
   <form method="POST">
     {% csrf_token %}
     <a href="{% url 'cws:index' %}"><button type="button" class="btn btn-warning" value="New Board">New Board</button></a>
-    <a href="{% url 'cws:print_view' %}" target="_blank"><button type="button" class="btn btn-warning" value="Print Board">Print Board</button></a>
+    <!-- <a href="{% url 'cws:print_view' %}" target="_blank"> -->
+      <button type="button" id="print_button" class="btn btn-warning" value="Print Board" onclick="callPrintView();">Print Board</button>
+    <!-- </a> -->
     &nbsp;&nbsp;&nbsp;Save Board:
-    <input type="submit" class="btn btn-warning board_options" name="submit" value="Text Grid">
-    <input type="submit" class="btn btn-warning board_options" name="submit" value="Excel Grid">
+    <input type="submit" class="btn btn-warning board_options" name="submit" value="Text">
+    <input type="submit" class="btn btn-warning board_options" name="submit" value="Excel">
     &nbsp;&nbsp;&nbsp;Save Key:
-    <input type="submit" class="btn btn-warning board_options" name="submit" value="Text Key">
-    <input type="submit" class="btn btn-warning board_options" name="submit" value="Excel Key">
+    <input type="submit" class="btn btn-warning board_options" name="submit" value="Text">
+    <input type="submit" class="btn btn-warning board_options" name="submit" value="Excel">
   </form>
   </div>
 <p></p>

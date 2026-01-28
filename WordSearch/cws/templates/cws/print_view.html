@@ -17,6 +17,7 @@
 
     <link rel="stylesheet" href="{% static 'css/word_search.css' %}">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Overpass+Mono">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cutive+Mono&display=swap">
     <!-- <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cutive+Mono&display=swap" rel="stylesheet"> -->
@@ -30,7 +31,7 @@
 <h2>Find Your Words:&nbsp;{{ wc }}</h2>
 </div>
 <br>
-<div class="container">
+<div class="container font_{{ font_style }}">
     <div class="row">
       <div class="col-2">
         <h5 class="game_name">Your Words:</h5>

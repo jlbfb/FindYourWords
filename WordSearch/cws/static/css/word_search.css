@@ -10,16 +10,26 @@ h1 {
     text-align: center;
 }
 
+#font_selector {
+    color: orange;
+    margin-top: 2em;
+    float: right;
+}
+
 .font_serif {
     font-family: 'Cutive Mono', monospace;
-    font-weight: 400;
-    font-style: normal;
+    /* font-weight: 400;
+    font-style: normal; */
+}
+
+.font_sans_serif {
+    font-family: 'Overpass Mono', 'sans-serif';
 }
 
 .game_board {
     align-items: center;
     align-content: center;
-    font-family: 'Overpass Mono', 'sans-serif';
+    /* font-family: 'Overpass Mono', 'sans-serif'; */
     /* line-height: .8em;
     letter-spacing: .05em; */
 }
@@ -31,6 +41,10 @@ h1 {
 
 .grid {
     text-align: center;
+}
+
+#print_button:hover {
+    cursor: pointer;
 }
 
 .print_0 {

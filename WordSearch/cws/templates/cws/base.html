@@ -14,17 +14,18 @@
 
     <link rel="stylesheet" href="{% static 'css/word_search.css' %}">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Overpass+Mono">
-    <link href="https://fonts.googleapis.com/css2?family=Cutive+Mono&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cutive+Mono&display=swap">
 
 </head>
 <body>
     <div class="container jumbotron">
         <h1>Find Your Words</h1>
+        <span id="font_selector">Font Style: <a href='' onclick="swapFont(event);"><span id="font_style">Serif</a></span></span>
     </div>
 
-    <div class="container mycontent">
+    <div id="content_block" class="container mycontent font_{{ font_style }}">
     {% block content %}
-    {% endblock %}
+    {% endblock content %}
     </div>
 
 

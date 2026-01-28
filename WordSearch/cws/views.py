@@ -5,7 +5,7 @@ import re
 import math
 from django.conf import settings
 from django.shortcuts import render
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, HttpResponse
 from .forms import WordsForm, WordCollectionForm
 from .models import Word, WordCollection
 from .ws import (
@@ -30,10 +30,25 @@ from .ws import (
 logger = logging.getLogger(__name__)
 
 
+def font_style_selector(request):
+    font_style = request.POST['font_style']
+    if not font_style:
+        font_style = request.GET.get('font_style', '')
+    if font_style:
+        request.session['font_style'] = font_style
+    else:
+        try:
+            font_style = request.session['font_style']
+        except:
+            font_style = 'serif'
+    return font_style
+
+
 # Create your views here.
 def index(request, update=''):
     word_list = ''
     difficulty = ''
+    font_style = font_style_selector(request)
 
     if request.method == 'POST':
         word_collection_form = WordCollectionForm(data=request.POST)
@@ -91,6 +106,7 @@ def index(request, update=''):
         'words_form': words_form,
         'word_list': word_list,
         'difficulty': difficulty,
+        'font_style': font_style,
     }
     template = 'cws/index.html'
     return render(request, template, context)
@@ -103,6 +119,7 @@ def verify(request):
     request.session['wc2'] = wc2
     word_list = request.session['word_list']
     difficulty = request.session['difficulty']
+    font_style = font_style_selector(request)
 
     word_set = word_collector(word_list)
     pickled_word_set = pickle.dumps(word_set).hex()
@@ -141,6 +158,7 @@ def verify(request):
         'word_list': word_list,
         'difficulty': difficulty,
         'min_grid_size': min_grid_size,
+        'font_style': font_style,
     }
     try:
         build_fail = request.session['build_fail']
@@ -200,6 +218,7 @@ def board(request):
     word_list = request.session['word_list']
     grid_size = request.session['grid_size']
     grid_map = request.session['grid_map']
+    font_style = font_style_selector(request)
 
     if request.method == 'POST':
         options = request.POST['submit']
@@ -242,7 +261,8 @@ def board(request):
         'title': 'Find Your Words',
         'wc': wc,
         'word_list': word_list,
-        'grid_map_template': grid_map_template
+        'grid_map_template': grid_map_template,
+        'font_style': font_style,
     }
     template = 'cws/board.html'
     return render(request, template, context)
@@ -254,12 +274,15 @@ def print_view(request):
     word_list = request.session['word_list']
     grid_size = request.session['grid_size']
 
+    font_style = request.GET.get('font_style', 'serif')
+
     context = {
         'title': 'Print Your Words',
         'wc': wc,
         'word_list': word_list,
         'grid_size': grid_size,
-        'grid_map_template': grid_map_template
+        'grid_map_template': grid_map_template,
+        'font_style': font_style,
     }
     template = 'cws/print_view.html'
     return render(request, template, context)
