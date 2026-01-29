@@ -10,7 +10,7 @@ h1 {
     text-align: center;
 }
 
-#font_selector {
+#font_field {
     color: orange;
     margin-top: 2em;
     float: right;
@@ -18,12 +18,17 @@ h1 {
 
 .font_serif {
     font-family: 'Cutive Mono', monospace;
-    /* font-weight: 400;
-    font-style: normal; */
+    font-weight: 500;
+    font-style: normal;
+    line-height: 1.5em;
 }
 
 .font_sans_serif {
     font-family: 'Overpass Mono', 'sans-serif';
+    line-height: 1.5em;
+    font-weight: 400;
+    font-style: normal;
+    /* letter-spacing: .05em; */
 }
 
 .game_board {

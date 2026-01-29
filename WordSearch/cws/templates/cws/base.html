@@ -20,7 +20,7 @@
 <body>
     <div class="container jumbotron">
         <h1>Find Your Words</h1>
-        <span id="font_selector">Font Style: <a href='' onclick="swapFont(event);"><span id="font_style">Serif</a></span></span>
+        <span id="font_field" class="small">Current Font Style: <a href='' onclick="swapFont(event);"><span id="font_selector">{{ font_name }}</a></span></span>
     </div>
 
     <div id="content_block" class="container mycontent font_{{ font_style }}">

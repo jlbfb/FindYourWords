@@ -4,7 +4,9 @@ from django.shortcuts import render
 
 def index(request):
     context = {
-        'title': 'Find Your Words'
+        'title': 'Find Your Words',
+        'font_style': 'sans_serif',
+        'font_name': 'Sans Serif',
     }
     template = 'index.html'
 

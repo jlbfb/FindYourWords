@@ -3,7 +3,7 @@
 
 function swapFont(e) {
     e.preventDefault();
-    var currentFont = document.getElementById('font_style');
+    var currentFont = document.getElementById('font_selector');
     var contentBlock = document.getElementById('content_block');
     // console.log('JS script found and swapFont clicked');
     if (currentFont.innerText === 'Sans Serif') {
@@ -20,11 +20,11 @@ function swapFont(e) {
 }
 
 function callPrintView() {
-    var currentFont = document.getElementById('font_style');
+    var currentFont = document.getElementById('font_selector');
     if (currentFont.innerText === 'Sans Serif') {
         fontStyle = 'sans_serif';
     } else {
         fontStyle = 'serif';
     }
-    window.location.href = `print_view?font_style=${fontStyle}`;
+    window.open(`print_view?font_style=${fontStyle}`, "_blank");
 }
