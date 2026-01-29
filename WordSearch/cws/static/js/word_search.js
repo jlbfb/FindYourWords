@@ -28,3 +28,22 @@ function callPrintView() {
     }
     window.open(`print_view?font_style=${fontStyle}`, "_blank");
 }
+
+window.onload = function() {
+    var wordForm = document.getElementById('id_words');
+    var wordCollectionForm = document.getElementById('id_word_collection');
+
+    if (wordForm && wordCollectionForm) {
+        console.log('Sees the forms');
+        wordForm.addEventListener('keyup', function() {
+            var wordFormUpper = wordForm.value.toUpperCase();
+            wordForm.value = wordFormUpper;
+            console.log('Transformed the word form');
+        })
+        wordCollectionForm.addEventListener('keyup', function () {
+            var wordCollectionFormUpper = wordCollectionForm.value.toUpperCase();
+            wordCollectionForm.value = wordCollectionFormUpper;
+            console.log('Transformed the word collection form');
+        })
+    }
+}

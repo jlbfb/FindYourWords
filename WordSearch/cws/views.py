@@ -33,6 +33,7 @@ logger = logging.getLogger(__name__)
 def font_style_selector(request):
     if request.method == 'POST':
         font_style = request.POST['font_style']
+        logger.info(f'Font Style found in POST: {font_style}')
     else:
         font_style = request.GET.get('font_style', '')
     if font_style:
@@ -225,7 +226,8 @@ def board(request):
     font_style, font_name = font_style_selector(request)
 
     if request.method == 'POST':
-        options = request.POST['submit']
+        options = request.POST  # ['submit']
+        logger.info(f'Options: {options}')
         print(f'Options: {options}')
         if 'Save' in options:
             word_collection = WordCollection.objects.create(
@@ -295,10 +297,13 @@ def print_view(request):
 
 
 def download(request):
+    font_style, font_name = font_style_selector(request)
     file_name = request.session['file_name']
     context = {
         'title': 'Download Your Board',
-        'file_name': file_name
+        'file_name': file_name,
+        'font_style': font_style,
+        'font_name': font_name,
     }
     template = 'cws/download.html'
     return render(request, template, context)
@@ -306,6 +311,8 @@ def download(request):
 
 def delete_board(request):
     file_name = request.session['file_name']
-    os.remove(f'{settings.MEDIA_ROOT}/grids/{file_name}')
-
+    try:
+        os.remove(f'{settings.MEDIA_ROOT}/grids/{file_name}')
+    except FileNotFoundError:
+        pass
     return HttpResponseRedirect('board')

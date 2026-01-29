@@ -21,6 +21,8 @@ h1 {
     font-weight: 500;
     font-style: normal;
     line-height: 1.5em;
+    /* letter-spacing: .1 em; */
+    font-variant-ligatures: none;
 }
 
 .font_sans_serif {
@@ -28,15 +30,16 @@ h1 {
     line-height: 1.5em;
     font-weight: 400;
     font-style: normal;
-    /* letter-spacing: .05em; */
+    /* letter-spacing: .1 em; */
+    font-variant-ligatures: none;
 }
 
 .game_board {
     align-items: center;
     align-content: center;
     /* font-family: 'Overpass Mono', 'sans-serif'; */
-    /* line-height: .8em;
-    letter-spacing: .05em; */
+    /* line-height: .8em; */
+    letter-spacing: .05em;
 }
 
 .game_name {
