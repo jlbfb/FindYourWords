@@ -18,7 +18,7 @@
 {% endfor %}
 </div>
 <br>
-<p>To change any of your words, click <a href="{% url 'cws:update' %}?font_style={{ font_style }}">here</a>.</p>
+<p>To change any of your words, click <a id="change_link" href="{% url 'cws:update' %}?font_style={{ font_style }}">here</a>.</p>
 <form method="POST">
     {% csrf_token %}
     <p>

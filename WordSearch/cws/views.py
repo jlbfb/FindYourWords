@@ -36,13 +36,16 @@ def font_style_selector(request):
         logger.info(f'Font Style found in POST: {font_style}')
     else:
         font_style = request.GET.get('font_style', '')
+        logger.info(f'Font Style found in GET: {font_style}')
     if font_style:
         request.session['font_style'] = font_style
+        logger.info(f'Font Style recorded in SESSION: {font_style}')
     else:
         try:
             font_style = request.session['font_style']
         except:
             font_style = 'serif'
+            logger.info(f'Font Style found in DEFAULT: {font_style}')
     font_name = font_style.replace('_', ' ').title()
     return font_style, font_name
 

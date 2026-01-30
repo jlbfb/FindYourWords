@@ -3,7 +3,7 @@ h1 {
 }
 
 .board_options {
-    width: 105px;
+    /* width: 105px; */
 }
 
 .center {
@@ -21,7 +21,7 @@ h1 {
     font-weight: 500;
     font-style: normal;
     line-height: 1.5em;
-    /* letter-spacing: .1 em; */
+    letter-spacing: -1px;
     font-variant-ligatures: none;
 }
 
@@ -30,7 +30,7 @@ h1 {
     line-height: 1.5em;
     font-weight: 400;
     font-style: normal;
-    /* letter-spacing: .1 em; */
+    letter-spacing: -1px;
     font-variant-ligatures: none;
 }
 
