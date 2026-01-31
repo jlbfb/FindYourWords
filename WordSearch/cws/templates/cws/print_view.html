@@ -27,22 +27,45 @@
 <body>
 
 
-<div class="container game_name">
+<div class="container game_name mb-4">
 <h2>Find Your Words:&nbsp;{{ wc }}</h2>
 </div>
 <br>
-<div class="container font_{{ font_style }}">
-    <div class="row">
-      <div class="col-2">
-        <h5 class="game_name">Your Words:</h5>
-        <div class="word_list">
-        {% for word in word_list %}
-        {{ word }}<br>
-        {% endfor %}
-        </div>
+<div class="container board_font_{{ font_style }}">
+    <div class="{% if list_position in 'top bottom' %}col-12 d-flex flex-column{% else %}row{% endif %}">
+      <div class="{% if list_position in 'right left' %}col-2{% else %}row{% endif %} order-{% if list_position == 'right' %}2{% elif list_position == 'bottom' %}2 w-100 mt-4 mx-2{% else %}1 {% if list_position == 'top' %}w-100 mb-4 mx-2{% endif %}{% endif %}">
+        {% if list_position in 'left right' %}
+          <h5 class="game_name">Your Words:</h5>
+          <div class="word_list">
+            {% for word in word_list %}
+              {{ word }}<br>
+            {% endfor %}
+          </div>
+        {% else %}
+          {% if list_position in 'top bottom' %}
+            <div class="container">
+          {% endif %}
+          <div class="row w-100 order-{% if list_position == 'top' %}1{% else %}2{% endif %}">
+            <h5 class="game_name">Your Words:</h5>
+          </div>
+          <div class="row w-100 word_list order-{% if list_position == 'top' %}2{% else %}3{% endif %}">
+            <div class="col-4">
+              {% for word in word_list %}
+                {{ word }}<br>
+                {% if forloop.counter|divisibleby:list_split %}
+                  </div>
+                  <div class="col-4">
+                {% endif %}
+              {% endfor %}
+            </div>
+          </div>
+          {% if list_position in 'top bottom' %}
+            </div>
+          {% endif %}
+        {% endif %}
       </div>
 
-      <div class="col-10" align="center">
+      <div class="{% if list_position in 'right left' %}col-10{% else %}row{% endif %} order-{% if list_position in 'right bottom' %}1 w-100{% elif list_position == 'top' %}3 w-100{% else %}2{% endif %} d-flex justify-content-center">
         {% if grid_size >= 45 %}
           <div class="game_board print_45">
         {% elif grid_size >= 35 %}

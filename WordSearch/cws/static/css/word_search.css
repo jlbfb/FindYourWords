@@ -1,6 +1,18 @@
 h1 {
     color: orange;
 }
+.board_font_serif {
+    font-family: 'Cutive Mono', monospace;
+    font-weight: 600;
+    font-style: normal;
+    font-variant-ligatures: none;
+}
+
+.board_font_sans_serif {
+    font-family: 'Overpass Mono', 'sans-serif';
+    font-style: normal;
+    font-variant-ligatures: none;
+}
 
 .board_options {
     /* width: 105px; */
@@ -12,8 +24,14 @@ h1 {
 
 #font_field {
     color: orange;
-    margin-top: 2em;
+    margin-top: 1em;
     float: right;
+}
+
+@media (min-width: 578px) {
+    #font_field {
+        margin-top: 3em;
+    }
 }
 
 .font_serif {
@@ -64,7 +82,7 @@ h1 {
 .print_15 {
     font-size: 1.8em;
     line-height: 1em;
-    letter-spacing: .3em;
+    letter-spacing: .4em;
 }
 
 .print_25 {

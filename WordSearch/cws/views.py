@@ -285,6 +285,11 @@ def print_view(request):
     grid_size = request.session['grid_size']
 
     font_style, font_name = font_style_selector(request)
+    list_thirds = divmod(len(word_list), 3)
+    if list_thirds[1] > 0:
+        list_split = list_thirds[0] + 1
+    else:
+        list_split = list_thirds[0]
 
     context = {
         'title': 'Print Your Words',
@@ -294,6 +299,8 @@ def print_view(request):
         'grid_map_template': grid_map_template,
         'font_style': font_style,
         'font_name': font_name,
+        'list_position': 'bottom',
+        'list_split': list_split,
     }
     template = 'cws/print_view.html'
     return render(request, template, context)
