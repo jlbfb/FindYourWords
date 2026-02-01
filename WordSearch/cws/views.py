@@ -50,6 +50,15 @@ def font_style_selector(request):
     return font_style, font_name
 
 
+def list_splitter(word_list):
+    list_thirds = divmod(len(word_list), 3)
+    if list_thirds[1] > 0:
+        list_split = list_thirds[0] + 1
+    else:
+        list_split = list_thirds[0]
+    return list_split
+
+
 # Create your views here.
 def index(request, update=''):
     word_list = ''
@@ -227,22 +236,24 @@ def board(request):
     grid_size = request.session['grid_size']
     grid_map = request.session['grid_map']
     font_style, font_name = font_style_selector(request)
+    list_split = list_splitter(word_list)
 
     if request.method == 'POST':
-        options = request.POST  # ['submit']
+        options = request.POST['submit']
         logger.info(f'Options: {options}')
-        print(f'Options: {options}')
         if 'Save' in options:
             word_collection = WordCollection.objects.create(
                 word_collection=wc
             )
             # wc_id = WordCollection.objects.get(pk=word_collection.pk)
-            print(f'Word Collection: {word_collection}-{word_collection.pk}')
+            logger.debug(
+                f'Word Collection: {word_collection}-{word_collection.pk}'
+            )
             for search_word in word_list:
                 Word.objects.create(
                     word_collections=word_collection, word=search_word
                 )
-                print(f'Saved: {search_word}')
+                logger.debug(f'Saved: {search_word}')
         elif 'Text Grid' in options:
             grid_map_export_txt(grid_size, grid_map, wc, wc2, word_list)
             request.session['file_name'] = f'{wc2}.txt'
@@ -273,6 +284,7 @@ def board(request):
         'grid_map_template': grid_map_template,
         'font_style': font_style,
         'font_name': font_name,
+        'list_split': list_split,
     }
     template = 'cws/board.html'
     return render(request, template, context)
@@ -285,11 +297,10 @@ def print_view(request):
     grid_size = request.session['grid_size']
 
     font_style, font_name = font_style_selector(request)
-    list_thirds = divmod(len(word_list), 3)
-    if list_thirds[1] > 0:
-        list_split = list_thirds[0] + 1
-    else:
-        list_split = list_thirds[0]
+    list_position = request.GET.get('list_position')
+    if not list_position:
+        list_position = 'left'
+    list_split = list_splitter(word_list)
 
     context = {
         'title': 'Print Your Words',
@@ -299,7 +310,7 @@ def print_view(request):
         'grid_map_template': grid_map_template,
         'font_style': font_style,
         'font_name': font_name,
-        'list_position': 'bottom',
+        'list_position': list_position,
         'list_split': list_split,
     }
     template = 'cws/print_view.html'

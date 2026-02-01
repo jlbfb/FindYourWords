@@ -1,6 +1,12 @@
 h1 {
     color: orange;
 }
+
+h6 {
+    font-size: 0.9em;
+    line-height: 1;
+}
+
 .board_font_serif {
     font-family: 'Cutive Mono', monospace;
     font-weight: 600;
@@ -113,3 +119,11 @@ h1 {
     /* line-height: 1em; */
     /* letter-spacing: .8em; */
 }
+
+/* .word_list_order_left, .board_order_right, .word_list_order_top, .board_order_bottom {
+    order: 1;
+}
+
+.word_list_order_right, .board_order_left, .board_order_top, .word_list_order_bottom {
+    order: 2;
+} */

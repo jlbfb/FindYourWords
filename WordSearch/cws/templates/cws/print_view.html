@@ -18,14 +18,9 @@
     <link rel="stylesheet" href="{% static 'css/word_search.css' %}">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Overpass+Mono">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cutive+Mono&display=swap">
-    <!-- <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Cutive+Mono&display=swap" rel="stylesheet"> -->
-
 
 </head>
 <body>
-
 
 <div class="container game_name mb-4">
 <h2>Find Your Words:&nbsp;{{ wc }}</h2>
@@ -53,8 +48,10 @@
               {% for word in word_list %}
                 {{ word }}<br>
                 {% if forloop.counter|divisibleby:list_split %}
-                  </div>
-                  <div class="col-4">
+                  {% if not forloop.last %}
+                    </div>
+                    <div class="col-4">
+                  {% endif %}
                 {% endif %}
               {% endfor %}
             </div>
@@ -79,7 +76,7 @@
         {% endif %}
 
           {% for item in grid_map_template %}
-          {{ item|safe }}
+            {{ item|safe }}
           {% endfor %}
 
           </div>
@@ -87,6 +84,7 @@
     </div>
 </div>
 </body>
+
 <script type="text/javascript">
     window.onload = function() { window.print(); }
 </script>

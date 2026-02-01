@@ -39,12 +39,39 @@ function swapFont(e) {
 
 function callPrintView() {
     var currentFont = document.getElementById('font_selector');
+    var listPosition = document.getElementById('list_position').value;
     if (currentFont.innerText === 'Sans Serif') {
         fontStyle = 'sans_serif';
     } else {
         fontStyle = 'serif';
     }
-    window.open(`print_view?font_style=${fontStyle}`, "_blank");
+    window.open(`print_view?font_style=${fontStyle}&list_position=${listPosition}`, "_blank");
+}
+
+function boardPosition(newPosition) {
+    console.log(newPosition);
+    var listPosition = document.getElementById('list_position');
+    listPosition.value = newPosition;
+    gameContainerTB = document.getElementById('game_container_tb');
+    gameContainerLR = document.getElementById('game_container_lr');
+    if (newPosition.includes('left') || newPosition.includes('right')) {
+        if (newPosition == 'left') {
+            gameContainerLR.classList.remove('flex-row-reverse');
+        } else if (newPosition == 'right') {
+            gameContainerLR.classList.add('flex-row-reverse');
+        }
+        gameContainerTB.classList.remove('d-flex', 'flex-column-reverse');
+        gameContainerTB.classList.add('d-none');
+        gameContainerLR.classList.remove('d-none');
+    } else if (newPosition.includes('top') || newPosition.includes('bottom')) {
+        if (newPosition == 'top') {
+            gameContainerTB.classList.remove('d-flex', 'flex-column-reverse');
+        } else if (newPosition == 'bottom') {
+            gameContainerTB.classList.add('d-flex', 'flex-column-reverse');
+        }
+        gameContainerLR.classList.add('d-none');
+        gameContainerTB.classList.remove('d-none');
+    }
 }
 
 window.onload = function() {
