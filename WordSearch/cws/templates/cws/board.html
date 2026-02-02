@@ -11,13 +11,13 @@
     </div>
     <div class="mb-2 ml-2 ml-sm-5 ml-md-auto">
       Save Board:<span class="d-inline d-sm-none"><br></span>
-      <input type="submit" class="btn btn-warning board_options" name="submit" value="Text Grid">
-      <input type="submit" class="btn btn-warning board_options" name="submit" value="Excel Grid">
+      <input type="submit" class="btn btn-warning" name="submit" value="Text Grid">
+      <input type="submit" class="btn btn-warning" name="submit" value="Excel Grid">
     </div>
     <div class="mb-2 ml-2 ml-sm-5 ml-md-auto">
       Save Key:<span class="d-inline d-sm-none"><br></span>
-      <input type="submit" class="btn btn-warning board_options" name="submit" value="Text Key">
-      <input type="submit" class="btn btn-warning board_options" name="submit" value="Excel Key">
+      <input type="submit" class="btn btn-warning" name="submit" value="Text Key">
+      <input type="submit" class="btn btn-warning" name="submit" value="Excel Key">
       <input type="hidden" id="font_style" name="font_style" value="{{ font_style }}">
       <input type="hidden" id="list_position" name="list_position" value="left">
     </div>
@@ -27,18 +27,25 @@
 <p></p>
 <div class="container game_name">
   <h3 class="mb-0">{{ wc }}</h3>
-  <span class="word_list_position ml-1">Word List Position: </span>
-  <span class="d-sm-none"><br></span>
-  <span class="ml-3 ml-sm-0">
-    <input type="radio" id="position_left" name="position_selector" value="left" checked onclick="boardPosition(this.value)">
-    <label for="position_left">Left&nbsp;</label>
-    <input type="radio" id="position_right" name="position_selector" value="right" onclick="boardPosition(this.value)">
-    <label for="position_right">Right&nbsp;</label>
-    <input type="radio" id="position_top" name="position_selector" value="top" onclick="boardPosition(this.value)">
-    <label for="position_top">Top&nbsp;</label>
-    <input type="radio" id="position_bottom" name="position_selector" value="bottom" onclick="boardPosition(this.value)">
-    <label for="position_bottom">Bottom&nbsp;</label>
-  </span>
+  <div class="mb-2">
+    <span class="word_list_position ml-1">Word List Position: </span>
+    <span class="d-sm-none"><br></span>
+    <span class="ml-3 ml-sm-0">
+      <input type="radio" id="position_left" name="position_selector" value="left" checked onclick="boardPosition(this.value)">
+      <label for="position_left">Left&nbsp;</label>
+      <input type="radio" id="position_right" name="position_selector" value="right" onclick="boardPosition(this.value)">
+      <label for="position_right">Right&nbsp;</label>
+    </span>
+    <span class="d-sm-none"><br></span>
+    <span class="ml-3 ml-sm-0">
+      <input type="radio" id="position_top" name="position_selector" value="top" onclick="boardPosition(this.value)">
+      <label for="position_top">Top</label>
+    </span>
+    <span class="ml-3 ml-sm-2">
+      <input type="radio" id="position_bottom" name="position_selector" value="bottom" onclick="boardPosition(this.value)">
+      <label for="position_bottom">Bottom&nbsp;</label>
+    </span>
+  </div>
 </div>
 
 <div class="container">
@@ -46,7 +53,7 @@
       <div id="word_list_container_lr" class="col-2 d-flex">
         <div class="row ml-1 w-100 align-self-start">
           <h6 class="game_name w-100">Your Words:</h6>
-          <span>
+          <span class="word_list_board">
             {% for word in word_list %}
             {{ word }} <br>
             {% endfor %}
@@ -63,26 +70,28 @@
     </div>
 
     <div id="game_container_tb" class="col flex-column d-none">
-        <div id="word_list_container_tb" class="row w-100 d-flex">
-          <div class="row w-100 ml-1 align-self-start">
-            <h6 class="game_name w-100">Your Words:</h6>
-          </div>
-          <div class="row ml-1 w-100">
-            <div class="col-4 mb-3">
+      <div id="word_list_container_tb" class="row">
+        <div class="row w-100 ml-1 align-self-start">
+          <h6 class="game_name w-100">Your Words:</h6>
+        </div>
+        <div class="col-12">
+          <div class="row">
+            <div class="col-4 pl-3 pl-sm-5 mb-3 word_list_board">
               {% for word in word_list %}
                 {{ word }}<br>
                 {% if forloop.counter|divisibleby:list_split %}
                   {% if not forloop.last %}
                     </div>
-                    <div class="col-4 mb-2">
+                    <div class="col-4 pl-3 pl-sm-5 mb-3 word_list_board">
                   {% endif %}
                 {% endif %}
               {% endfor %}
             </div>
           </div>
+        </div>
       </div>
 
-      <div id="board_container_tb" class="row game_board mb-2 justify-content-center">
+      <div id="board_container_tb" class="row game_board mb-3 justify-content-center">
         {% for item in grid_map_template %}
           {{ item|safe }}
         {% endfor %}

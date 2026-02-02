@@ -8,20 +8,16 @@ h6 {
 }
 
 .board_font_serif {
-    font-family: 'Cutive Mono', monospace;
+    font-family: 'Cutive Mono', 'Prestige Elite', 'Courier Prime', 'Xanh Mono', 'Triplicate';
     font-weight: 600;
     font-style: normal;
     font-variant-ligatures: none;
 }
 
 .board_font_sans_serif {
-    font-family: 'Overpass Mono', 'sans-serif';
+    font-family: 'Overpass Mono', 'Source Code Pro', 'Roboto Mono', 'JetBrains Mono';
     font-style: normal;
     font-variant-ligatures: none;
-}
-
-.board_options {
-    /* width: 105px; */
 }
 
 .center {
@@ -34,14 +30,8 @@ h6 {
     float: right;
 }
 
-@media (min-width: 578px) {
-    #font_field {
-        margin-top: 3em;
-    }
-}
-
 .font_serif {
-    font-family: 'Cutive Mono', monospace;
+    font-family: 'Cutive Mono', 'Prestige Elite', 'Courier Prime', 'Xanh Mono', 'Triplicate';
     font-weight: 500;
     font-style: normal;
     line-height: 1.5em;
@@ -50,7 +40,7 @@ h6 {
 }
 
 .font_sans_serif {
-    font-family: 'Overpass Mono', 'sans-serif';
+    font-family: 'Overpass Mono', 'Source Code Pro', 'Roboto Mono', 'JetBrains Mono';
     line-height: 1.5em;
     font-weight: 400;
     font-style: normal;
@@ -61,9 +51,9 @@ h6 {
 .game_board {
     align-items: center;
     align-content: center;
-    /* font-family: 'Overpass Mono', 'sans-serif'; */
-    /* line-height: .8em; */
-    letter-spacing: .05em;
+    font-size: clamp(.5rem, 1.5vw, 1.5rem);
+    line-height: .8em;
+    letter-spacing: clamp(.06em, .08em, .15em);
 }
 
 .game_name {
@@ -94,19 +84,19 @@ h6 {
 .print_25 {
     font-size: 1.6em;
     line-height: .9em;
-    letter-spacing: .14em;
+    letter-spacing: .25em;
 }
 
 .print_35 {
     font-size: 1.4em;
     line-height: .9em;
-    letter-spacing: .08em;
+    letter-spacing: .15em;
 }
 
 .print_45 {
     font-size: 1.2em;
     line-height: .8em;
-    letter-spacing: .08em;
+    letter-spacing: .1em;
 }
 
 .warning {
@@ -114,16 +104,17 @@ h6 {
     font-size: 1.1em;
 }
 
-.word_list {
+.word_list_board {
+    font-size: clamp(.5em, 1.2vw, 1.2rem);
+    line-height: 1.1em;
+}
+
+.word_list_print {
     font-size: 1.2em;
-    /* line-height: 1em; */
-    /* letter-spacing: .8em; */
 }
 
-/* .word_list_order_left, .board_order_right, .word_list_order_top, .board_order_bottom {
-    order: 1;
+@media (min-width: 578px) {
+    #font_field {
+        margin-top: 3em;
+    }
 }
-
-.word_list_order_right, .board_order_left, .board_order_top, .word_list_order_bottom {
-    order: 2;
-} */

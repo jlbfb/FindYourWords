@@ -7,9 +7,7 @@ function swapFont(e) {
     var contentBlock = document.getElementById('content_block');
     var hiddenFontStyle = document.getElementById('font_style');
     var getFontStyle = document.getElementById('change_link');
-    // console.log('JS script found and swapFont clicked');
     if (currentFont.innerText === 'Sans Serif') {
-        console.log('Sans found in text');
         contentBlock.classList.remove('font_sans_serif');
         contentBlock.classList.add('font_serif');
         currentFont.innerText = 'Serif';
@@ -22,7 +20,6 @@ function swapFont(e) {
             getFontStyle.setAttribute('href', newFontUrl);
         }
     } else {
-        console.log(`Sans not found, only ${currentFont.innerText}`);
         contentBlock.classList.remove('font_serif');
         contentBlock.classList.add('font_sans_serif');
         currentFont.innerText = 'Sans Serif';
@@ -49,7 +46,6 @@ function callPrintView() {
 }
 
 function boardPosition(newPosition) {
-    console.log(newPosition);
     var listPosition = document.getElementById('list_position');
     listPosition.value = newPosition;
     gameContainerTB = document.getElementById('game_container_tb');

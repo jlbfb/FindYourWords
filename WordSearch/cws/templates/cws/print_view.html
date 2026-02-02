@@ -14,7 +14,6 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
 
     <!-- Custom Font from fonts.google.com -->
-
     <link rel="stylesheet" href="{% static 'css/word_search.css' %}">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Overpass+Mono">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cutive+Mono&display=swap">
@@ -31,7 +30,7 @@
       <div class="{% if list_position in 'right left' %}col-2{% else %}row{% endif %} order-{% if list_position == 'right' %}2{% elif list_position == 'bottom' %}2 w-100 mt-4 mx-2{% else %}1 {% if list_position == 'top' %}w-100 mb-4 mx-2{% endif %}{% endif %}">
         {% if list_position in 'left right' %}
           <h5 class="game_name">Your Words:</h5>
-          <div class="word_list">
+          <div class="word_list_print">
             {% for word in word_list %}
               {{ word }}<br>
             {% endfor %}
@@ -43,14 +42,14 @@
           <div class="row w-100 order-{% if list_position == 'top' %}1{% else %}2{% endif %}">
             <h5 class="game_name">Your Words:</h5>
           </div>
-          <div class="row w-100 word_list order-{% if list_position == 'top' %}2{% else %}3{% endif %}">
+          <div class="row w-100 word_list_print order-{% if list_position in 'top bottom' %}2 pl-sm-5{% else %}3{% endif %}">
             <div class="col-4">
               {% for word in word_list %}
                 {{ word }}<br>
                 {% if forloop.counter|divisibleby:list_split %}
                   {% if not forloop.last %}
                     </div>
-                    <div class="col-4">
+                    <div class="col-4 pl-sm-5">
                   {% endif %}
                 {% endif %}
               {% endfor %}
