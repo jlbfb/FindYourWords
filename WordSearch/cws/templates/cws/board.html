@@ -53,7 +53,7 @@
       <div id="word_list_container_lr" class="col-2 d-flex">
         <div class="row ml-1 w-100 align-self-start">
           <h6 class="game_name w-100">Your Words:</h6>
-          <span class="word_list_board">
+          <span class="word_list_board" style="--font-ratio: {{ font_ratio }};">
             {% for word in word_list %}
             {{ word }} <br>
             {% endfor %}
@@ -62,7 +62,7 @@
         </div>
       </div>
 
-      <div id="board_container_lr" class="col-10 game_board d-flex justify-content-center">
+      <div id="board_container_lr" class="col-10 game_board d-flex justify-content-center" style="--font-ratio: {{ font_ratio }};">
         {% for item in grid_map_template %}
           {{ item|safe }}
         {% endfor %}
@@ -76,7 +76,7 @@
         </div>
         <div class="col-12">
           <div class="row">
-            <div class="col-4 pl-3 pl-sm-5 mb-3 word_list_board">
+            <div class="col-4 pl-3 pl-sm-5 mb-3 word_list_board" style="--font-ratio: {{ font_ratio }};">
               {% for word in word_list %}
                 {{ word }}<br>
                 {% if forloop.counter|divisibleby:list_split %}
@@ -91,7 +91,7 @@
         </div>
       </div>
 
-      <div id="board_container_tb" class="row game_board mb-3 justify-content-center">
+      <div id="board_container_tb" class="row game_board mb-3 justify-content-center" style="--font-ratio: {{ font_ratio }};">
         {% for item in grid_map_template %}
           {{ item|safe }}
         {% endfor %}

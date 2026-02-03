@@ -51,9 +51,9 @@ h6 {
 .game_board {
     align-items: center;
     align-content: center;
-    font-size: clamp(.5rem, 1.5vw, 1.5rem);
+    font-size: clamp(calc(var(--font-ratio) * .4rem), calc(var(--font-ratio) * 1.4vw), calc(var(--font-ratio) * 1.4rem));
     line-height: .8em;
-    letter-spacing: clamp(.06em, .08em, .15em);
+    letter-spacing: clamp(calc(var(--font-ratio) * .06rem), calc(var(--font-ratio) * .08rem), calc(var(--font-ratio) * .15rem));
 }
 
 .game_name {
@@ -105,7 +105,7 @@ h6 {
 }
 
 .word_list_board {
-    font-size: clamp(.5em, 1.2vw, 1.2rem);
+    font-size: clamp(calc(var(--font-ratio) * .4rem), calc(var(--font-ratio) * 1vw), calc(var(--font-ratio) * 1.1rem));
     line-height: 1.1em;
 }
 

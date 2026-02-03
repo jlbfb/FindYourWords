@@ -19,7 +19,7 @@ def timer(fn):
         call_func = fn(*args, **kwargs)
         end = perf_counter()
         elapsed = end - start
-        print(f'{fn.__name__} took {elapsed}')
+        logger.debug(f'{fn.__name__} took {elapsed}')
         return call_func
     return calculate
 
@@ -48,14 +48,14 @@ def word_collector(word_list: list):
     """
     words = sorted(word_list, key=lambda x: len(x))
     words.reverse()
-    print(f'Words sorted by length: {words}')
-    print(f'Word List: {word_list}')
+    logger.debug(f'Words sorted by length: {words}')
+    logger.debug(f'Word List: {word_list}')
     word_set = dict()
     # count = 0
     for count in range(0, len(words)):
         word_set[count] = {'word': words[count], 'set': {*words[count]}}
         # count += 1
-    print(f'Word Set: {word_set}')
+    logger.debug(f'Word Set: {word_set}')
     return word_set
 
 
@@ -68,7 +68,7 @@ def grid_builder(grid: int):
     for i in range(0, grid):
         for j in range(0, grid):
             grid_map[f'{i}-{j}'] = '.'
-    print('Grid built')
+    logger.debug('Grid built')
     return grid_map
 
 
@@ -77,16 +77,16 @@ def diff_and_dir(difficulty, word_set):
     Set word direction based upon the chosen difficulty level
     """
     randomizer = str()
-    # print(diff_dir)
+    # logger.debug(diff_dir)
     for d, p in diff_dir[difficulty]:
         randomizer = randomizer + (str(d) * int(p * 100))
-        # print(randomizer)
+        # logger.debug(randomizer)
     for count in range(0, len(word_set)):
         rand_int = randint(0, 99)
-        # print(rand_int)
+        # logger.debug(rand_int)
         dir_select = randomizer[rand_int]
         word_set[count]['dir'] = directions[int(dir_select)]
-        # print(rand_int, dir_select, word_set[count]['dir'])
+        # logger.debug(rand_int, dir_select, word_set[count]['dir'])
     return word_set
 
 
@@ -322,11 +322,11 @@ def grid_filler(word_set, grid, difficulty, grid_map):
             char_picker = randint(0, 99)
             char_picker = ('alpha' if char_picker < diff_fill[difficulty][0]
                            else 'words')
-            # print(char_picker, word_chars)
+            # logger.debug(char_picker, word_chars)
             rand_char = (randint(0, len(word_chars)-1)
                          if char_picker == 'words'
                          else randint(65, 90))
-            # print(rand_char)
+            # logger.debug(rand_char)
             rand_char = (chr(rand_char) if char_picker == 'alpha'
                          else word_chars[rand_char].upper())
             try:
@@ -339,10 +339,10 @@ def grid_filler(word_set, grid, difficulty, grid_map):
 
 def grid_map_display(grid, grid_map):
     for i in range(0, grid):
-        print()
+        logger.debug('\n')
         for j in range(0, grid):
-            print(grid_map[f'{i}-{j}'][0], end='')
-    print()
+            logger.debug(grid_map[f'{i}-{j}'][0], end='')
+    logger.debug('\n')
 
 
 def grid_map_for_template(grid, grid_map):
@@ -383,7 +383,7 @@ def grid_map_export_txt(
         f.write('\n\n')
         for word in word_list:
             f.write(f"{word}\n")
-    print('Done')
+    logger.debug('Done')
 
 
 @timer
@@ -437,7 +437,7 @@ def grid_map_export_excel(
         wb.save(f'{settings.MEDIA_ROOT}/grids/{wc2}_Key.xlsx')
     else:
         wb.save(f'{settings.MEDIA_ROOT}/grids/{wc2}.xlsx')
-    print('Done')
+    logger.debug('Done')
 
 
 # @timer
@@ -459,7 +459,7 @@ def grid_map_export_excel(
 #                     word = word_set[w]['word'], loop = loop)
 #             break
 #         except Exception as e:
-#             print(e)
+#             logger.debug(e)
 #             word_collection = input('Please enter another name for the '
 #                 'collection: ')
 
@@ -471,9 +471,9 @@ def grid_map_export_excel(
 #         this_grid = 1
 #     else:
 #         this_grid = max(this_grid)
-#         print(this_grid)
+#         logger.debug(this_grid)
 #         this_grid = this_grid[0] + 1
-#     print(this_grid)
+#     logger.debug(this_grid)
 #     for i in range(0, grid):
 #         for j in range(0, grid):
 #             if j == grid - 1:
@@ -493,9 +493,9 @@ def grid_map_export_excel(
 #     global word_list
 #     word_list = []
 #     collection_list = tw.get_data('Word_Collections', columns = '*')
-#     print('Available collections:')
+#     logger.debug('Available collections:')
 #     for collection in collection_list:
-#         print(f'{collection[0]}: {collection[1]}')
+#         logger.debug(f'{collection[0]}: {collection[1]}')
 #     while True:
 #         collection = input('Select the list to load: ')
 #         if re.match('^[0-9]{1,2}$', collection):
@@ -503,21 +503,21 @@ def grid_map_export_excel(
 #                 collection = int(collection)
 #                 words = tw.get_data('Words', columns = '*',
 #                     condition = f"word_collections_id = \'{collection}\'")
-#                 print(f'Words in the {collection_list[collection - 1][1]} '
+#                 logger.debug(f'Words in the {collection_list[collection - 1][1]} '
 #                     'Collection:')
 #                 for word in words:
 #                     word_list.append(word[2])
-#                     print(word[2])
+#                     logger.debug(word[2])
 #                 break
 #             except Exception as e:
-#                 print(f'{e}\nThat is not a valid selection.')
+#                 logger.debug(f'{e}\nThat is not a valid selection.')
 #         else:
-#             print('That is not a valid selection.')
+#             logger.debug('That is not a valid selection.')
 #     change_word()
 #     if changed_words != []:
 #         for change in changed_words:
 #             tw.update_data('Words', word = word_list[change],
 #                 id = words[change][0])
-#             print(f'Replaced {words[change][0]} with {word_list[change]}')
+#             logger.debug(f'Replaced {words[change][0]} with {word_list[change]}')
 #     else:
-#         print('No changes made.')
+#         logger.debug('No changes made.')

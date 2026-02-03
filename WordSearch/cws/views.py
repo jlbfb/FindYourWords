@@ -59,6 +59,13 @@ def list_splitter(word_list):
     return list_split
 
 
+def font_sizing(grid_size):
+    font_ratio = 50 / grid_size
+    if font_ratio > 2:
+        font_ratio = 2
+    return font_ratio
+
+
 # Create your views here.
 def index(request, update=''):
     word_list = ''
@@ -271,6 +278,7 @@ def board(request):
     else:
         grid_map_template = grid_map_for_template(grid_size, grid_map)
         request.session['grid_map_template'] = grid_map_template
+        font_ratio = font_sizing(grid_size)
 
     context = {
         'title': 'Find Your Words',
@@ -279,6 +287,7 @@ def board(request):
         'grid_map_template': grid_map_template,
         'font_style': font_style,
         'font_name': font_name,
+        'font_ratio': font_ratio,
         'list_split': list_split,
     }
     template = 'cws/board.html'
