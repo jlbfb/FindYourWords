@@ -7,7 +7,7 @@ from django.conf import settings
 from django.shortcuts import render
 from django.http import HttpResponseRedirect, HttpResponse
 from .forms import WordsForm, WordCollectionForm
-from .models import Word, WordCollection
+# from .models import Word, WordCollection
 from .ws import (
     grid_builder,
     grid_filler,
@@ -33,19 +33,19 @@ logger = logging.getLogger(__name__)
 def font_style_selector(request):
     if request.method == 'POST':
         font_style = request.POST['font_style']
-        logger.info(f'Font Style found in POST: {font_style}')
+        logger.debug(f'Font Style found in POST: {font_style}')
     else:
         font_style = request.GET.get('font_style', '')
-        logger.info(f'Font Style found in GET: {font_style}')
+        logger.debug(f'Font Style found in GET: {font_style}')
     if font_style:
         request.session['font_style'] = font_style
-        logger.info(f'Font Style recorded in SESSION: {font_style}')
+        logger.debug(f'Font Style recorded in SESSION: {font_style}')
     else:
         try:
             font_style = request.session['font_style']
         except:
             font_style = 'serif'
-            logger.info(f'Font Style found in DEFAULT: {font_style}')
+            logger.debug(f'Font Style found in DEFAULT: {font_style}')
     font_name = font_style.replace('_', ' ').title()
     return font_style, font_name
 
@@ -68,46 +68,42 @@ def index(request, update=''):
     if request.method == 'POST':
         word_collection_form = WordCollectionForm(data=request.POST)
         words_form = WordsForm(data=request.POST)
-        # word_form = WordForm()
 
         if word_collection_form.is_valid() and words_form.is_valid():
             difficulty = int(request.POST['difficulty']) - 1
-            # print(f'These are the details: {details}')
             request.session['difficulty'] = difficulty
             # request.session['grid_size'] = details['grid_size']
             wc = word_collection_form.cleaned_data['word_collection']
             # wc = re.sub(r'([^a-zA-Z0-9 ]+)','',wc)
-            print(f'WC = {wc}')
             request.session['wc'] = wc
             # word_form = word_form.save(commit=False)
             words = words_form.cleaned_data
-            print(f'Cleaned words = {words}')
+            logger.debug(f'Cleaned words = {words}')
             words_sub = re.sub(r'([^a-zA-Z]+)', ' ', words['words'])
             raw_word_list = words_sub.split(' ')
-            print(f'Raw Word_list = {raw_word_list}')
+            logger.debug(f'Raw Word_list = {raw_word_list}')
             word_list = set()
             for search_word in raw_word_list:
                 if not search_word:
                     continue  # Filter blanks
                 word_list.add(search_word.upper())
             word_list = sorted(list(word_list))
-            print(f'Cleaned Word List = {word_list}')
+            logger.debug(f'Cleaned Word List = {word_list}')
             request.session['word_list'] = word_list
             return HttpResponseRedirect('verify')
 
         else:
-            print(words_form.errors)  # word_collection_form.errors,
+            logger.info(words_form.errors)
 
     else:
         path = request.path
-        print(f'This is the path: {path}')
         if 'update' in path:
             current_words = request.session['word_list']
             wc = request.session['wc']
             difficulty = request.session['difficulty'] + 1
             for word in current_words:
                 word_list = word_list + f'{word}\n'
-            print(f'This is the word list: {word_list}')
+            logger.debug(f'This is the word list: {word_list}')
             words_form = WordsForm(initial={'words': word_list})
             word_collection_form = WordCollectionForm(
                 initial={'word_collection': wc}
@@ -164,7 +160,7 @@ def verify(request):
         # details = request.POST
         # logger.debug(f'The details: {details}')
         grid_size = request.POST['grid_size']
-        print(f'Grid Size = {grid_size} and Integer: {int(grid_size)}')
+        logger.debug(f'Grid Size = {grid_size} and Integer: {int(grid_size)}')
         request.session['grid_size'] = int(grid_size)
         return HttpResponseRedirect('grid')
 
@@ -217,13 +213,11 @@ def grid(request):
                     f'Diff: {difficulty}): {word_list}')
         request.session['build_fail'] = 1
         return HttpResponseRedirect('verify')
-    # Print grid map
     grid_map_display(grid_size, grid_map)
     grid_map = grid_filler(word_set, grid_size, difficulty, grid_map)
-    # Print grid map
     grid_map_display(grid_size, grid_map)
     request.session['grid_map'] = grid_map
-    logger.info('The grid map has been created')
+    logger.debug('The grid map has been created')
 
     return HttpResponseRedirect('board')
 
@@ -240,20 +234,21 @@ def board(request):
 
     if request.method == 'POST':
         options = request.POST['submit']
-        logger.info(f'Options: {options}')
+        logger.debug(f'Options: {options}')
         if 'Save' in options:
-            word_collection = WordCollection.objects.create(
-                word_collection=wc
-            )
+            logger.debug('Save option selected')
+            # word_collection = WordCollection.objects.create(
+            #     word_collection=wc
+            # )
             # wc_id = WordCollection.objects.get(pk=word_collection.pk)
-            logger.debug(
-                f'Word Collection: {word_collection}-{word_collection.pk}'
-            )
-            for search_word in word_list:
-                Word.objects.create(
-                    word_collections=word_collection, word=search_word
-                )
-                logger.debug(f'Saved: {search_word}')
+            # logger.debug(
+            #     f'Word Collection: {word_collection}-{word_collection.pk}'
+            # )
+            # for search_word in word_list:
+            #     Word.objects.create(
+            #         word_collections=word_collection, word=search_word
+            #     )
+            #     logger.debug(f'Saved: {search_word}')
         elif 'Text Grid' in options:
             grid_map_export_txt(grid_size, grid_map, wc, wc2, word_list)
             request.session['file_name'] = f'{wc2}.txt'

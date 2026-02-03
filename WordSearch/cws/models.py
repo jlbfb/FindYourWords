@@ -38,37 +38,37 @@ class Word(models.Model):
         return self.word
 
 
-class CollectionGrid(models.Model):
-    word_collection = models.ForeignKey(
-        WordCollection, on_delete=models.CASCADE
-    )
-    grid_map_key = models.IntegerField(unique=True)
-    difficulty = models.IntegerField()
-    grid_size = models.IntegerField()
+# class CollectionGrid(models.Model):
+#     word_collection = models.ForeignKey(
+#         WordCollection, on_delete=models.CASCADE
+#     )
+#     grid_map_key = models.IntegerField(unique=True)
+#     difficulty = models.IntegerField()
+#     grid_size = models.IntegerField()
 
-    class Meta:
-        verbose_name = 'Collection Grid'
-        verbose_name_plural = 'Collection Grids'
+#     class Meta:
+#         verbose_name = 'Collection Grid'
+#         verbose_name_plural = 'Collection Grids'
 
-    def __str__(self):
-        return (f'{self.word_collection}-{self.grid_map_key}-'
-                f'{self.difficulty}-{self.grid_size}')
+#     def __str__(self):
+#         return (f'{self.word_collection}-{self.grid_map_key}-'
+#                 f'{self.difficulty}-{self.grid_size}')
 
 
-class GridMap(models.Model):
-    grid_map_key = models.ForeignKey(
-        CollectionGrid,
-        to_field='grid_map_key',
-        db_column='grid_map_key',
-        on_delete=models.CASCADE
-    )
-    cell = models.CharField(max_length=7)
-    letter = models.CharField(max_length=1)
-    word_key = models.IntegerField()
+# class GridMap(models.Model):
+#     grid_map_key = models.ForeignKey(
+#         CollectionGrid,
+#         to_field='grid_map_key',
+#         db_column='grid_map_key',
+#         on_delete=models.CASCADE
+#     )
+#     cell = models.CharField(max_length=7)
+#     letter = models.CharField(max_length=1)
+#     word_key = models.IntegerField()
 
-    class Meta:
-        verbose_name = 'Grid Map'
-        verbose_name_plural = 'Grid Maps'
+#     class Meta:
+#         verbose_name = 'Grid Map'
+#         verbose_name_plural = 'Grid Maps'
 
-    def __str__(self):
-        return self.cell
+#     def __str__(self):
+#         return self.cell

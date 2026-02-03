@@ -1,5 +1,5 @@
 from django import forms
-from cws.models import WordCollection, Word
+# from cws.models import WordCollection, Word
 
 
 # Forms go here
@@ -9,21 +9,13 @@ class WordsForm(forms.Form):
                        'with a space or special character',
         'style': 'resize:none'}))
 
-    class Meta:
-        model = Word
+    # class Meta:
+    #     model = Word
 
 
-class WordCollectionForm(forms.ModelForm):
+class WordCollectionForm(forms.Form):
     word_collection = forms.CharField(label='Word Collection Name')
 
-    class Meta:
-        model = WordCollection
-        fields = '__all__'
-
-
-class WordForm(forms.ModelForm):
-    word = forms.CharField()
-
-    class Meta:
-        model = Word
-        fields = ('word',)
+    # class Meta:
+    #     model = WordCollection
+    #     fields = '__all__'

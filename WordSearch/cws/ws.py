@@ -99,24 +99,8 @@ def generate_start_positions(word_set, grid_size):
     potential_placements = defaultdict(lambda: defaultdict(list))
     count = 0
     while count < len(word_set):
-        # logger.debug(f'Word = {word_set[count]["word"]}')
-        # logger.debug(f'Count = {count}')
         this_word = word_set[count]['word']
         word_length = len(this_word)
-
-        # TESTING
-        # if word_set[count]['word'].lower() == 'banananas':
-        #     x_dir = 0
-        #     y_dir = 1
-        # elif word_set[count]['word'].lower() == 'badderina':
-        #     x_dir = 1
-        #     y_dir = 1
-        # elif word_set[count]['word'].lower() == 'balaclava':
-        #     x_dir = 0
-        #     y_dir = 1
-        # else:
-        # End TESTING
-
         x_dir = word_set[count]['dir'][1]
         y_dir = word_set[count]['dir'][2]
         x_step = x_dir
@@ -141,16 +125,6 @@ def generate_start_positions(word_set, grid_size):
             start_y = 0
             final_y = grid_size
             y_step = 1
-        # logger.debug(f'Variables:\n'
-        #              f'X Dir = {x_dir}\n'
-        #              f'X Step = {x_step}\n'
-        #              f'Start X = {start_x}\n'
-        #              f'Final X = {final_x}\n'
-        #              f'Y Dir = {y_dir}\n'
-        #              f'Y Step = {y_step}\n'
-        #              f'Start Y = {start_y}\n'
-        #              f'Final Y = {final_y}'
-        #              )
         # Build the grid space options dictionary
         x_count = 0
         y_count = 0
@@ -181,17 +155,6 @@ def generate_start_positions(word_set, grid_size):
                 col = col + y_dir
             row = row + x_dir
         count += 1
-    # for k,v in space_options.items():
-    #     print(f'Space {k}')
-    #     for vk,vv in v.items():
-    #         if len(vv) > 1:
-    #             print(f'Letter {vk}: {vv}')
-    # unplaced_words = {
-    #     sorted(unplaced_words.items(), key=lambda spots: len(spots[1]))
-    # }
-    # for k,v in potential_placements.items():
-    #     print(f'Word {k}: Starting spaces: {v}')
-    #     print(f'Count of starting spaces for {k}: {len(v)}')
     return space_options, potential_placements
 
 
@@ -346,88 +309,6 @@ def new_word_placer(
         'time to build the grid!'
     )
     return grid_map
-
-
-# @timer
-# def word_placer(word_set, grid, grid_map, difficulty):
-#     """
-#     Determine the position of the search words within the grid
-#     """
-#     count = 0
-#     total_conflicts = 0
-#     while count < len(word_set):
-#         print(f'Count = {count}')
-#         conflict = 0
-#         while True:
-#             cross = 0
-#             if conflict >= 20:
-#                 # logger.info(f'Crossing word conflict: {conflict}')
-#                 total_conflicts += 1
-#                 if total_conflicts >= 50:
-#                     return 'CannotBuild'
-#                 if total_conflicts % 5 == 0:
-#                     logger.info(f'Total Conflicts: {total_conflicts}')
-#                     # total_conflicts = 0
-#                     word_set = diff_and_dir(difficulty, word_set)
-#                 grid_map = grid_builder(grid)
-#                 count = 0
-#                 break
-#             this_word = word_set[count]['word']
-#             word_len = len(word_set[count]['word'])
-#             x_dir = word_set[count]['dir'][1]
-#             y_dir = word_set[count]['dir'][2]
-#             if x_dir > 0:
-#                 start_x = randint(0, grid - word_len) # - 1)
-#             elif x_dir < 0:
-#                 start_x = randint(word_len - 1, grid - 1)
-#             else:
-#                 start_x = randint(0, grid - 1)
-#             if y_dir > 0:
-#                 start_y = randint(0, grid - word_len) # - 1)
-#             elif y_dir < 0:
-#                 start_y = randint(word_len - 1, grid-1)
-#             else:
-#                 start_y = randint(0, grid - 1)
-#             # print(f'Grid: {grid}')
-#             # print(f'Grid Map:  {grid_map}')
-#             print(f'start_x:{start_x}, start_y:{start_y}, x_dir:{x_dir},'
-#                 f'y_dir:{y_dir}, word_len:{word_len}, grid:{grid}')
-#             print(f'x ending space: {start_x + (x_dir * (word_len - 1))}')
-#             print(f'y ending space: {start_y + (y_dir * (word_len - 1))}')
-#             if 0 <= (start_x + (x_dir * (word_len - 1))) < grid:
-#                 if 0 <= (start_y + (y_dir * (word_len - 1))) < grid:
-#                     print(
-#                         f"{this_word} starting space is {start_x},{start_y}"
-#                     )
-#                     letters = dict()
-#                     letters[0] = grid_map[f'{start_x}-{start_y}']
-#                     for char in range(1, word_len):
-#                         letters[char] = grid_map[
-#                             f'{start_x + (x_dir * char)}'
-#                             f'-{start_y + (y_dir * char)}'
-#                         ]
-#                     for char in range(0, word_len):
-#                         if (letters[char] != '.'
-#                                 and letters[char] != this_word[char]):
-#                             cross = 1
-#                             conflict += 1
-#                             print(f'Crossing word conflict: {conflict}')
-#                             break
-#                     if cross == 0:
-#                         grid_map[f'{start_x}-{start_y}'] = this_word[0], 1
-#                         for char in range(1, word_len):
-#                             grid_map[f'{start_x + (x_dir * char)}-'
-#                                 f'{start_y + (y_dir * char)}'
-#                                 ] = this_word[char], 1
-#                         count += 1
-#                         break
-#                 else:
-#                     print(f"{word_set[count]['word']}"
-#                         f" does not fit from y{start_y}")
-#             else:
-#                 print(f"{word_set[count]['word']}"
-#                     f" does not fit from x{start_x}")
-#     return grid_map
 
 
 @timer
@@ -640,83 +521,3 @@ def grid_map_export_excel(
 #             print(f'Replaced {words[change][0]} with {word_list[change]}')
 #     else:
 #         print('No changes made.')
-
-
-# Start of script
-'''
-# Variables
-cell_ctr = Alignment(horizontal='center')
-# tw = WordSearchDB('WordSearch.db')
-
-# TODO:  Set a minimum of 2 words
-num_words = input('Enter the number of words in collection: ')
-word_set = integer_check(word_collector, num_words)
-
-long_word = word_set[0]['word']
-min_grid_size = len(long_word) + int(len(word_set) * .5)
-
-grid = input(f'Enter the grid size (minimum {min_grid_size}): ')
-while True:
-    if not re.match("^[0-9]{1,2}$", grid) or int(grid) < min_grid_size:
-        grid = input(f'Please enter a number between {min_grid_size}-99: ')
-        continue
-    grid = int(grid)
-    break
-
-grid_map = integer_check(grid_builder, grid)
-
-difficulty = input('Please enter the difficulty level (0-9): ')
-while True:
-    if not re.match("^[0-9]{1,1}$", difficulty):
-        difficulty = input('Please enter a number between 0-9: ')
-        continue
-    difficulty = int(difficulty)
-    break
-
-diff_and_dir()
-
-word_placer()
-
-grid_map_display()
-
-grid_filler()
-
-grid_map_display()
-
-export = input(f'Export {word_collection} Word Search to text file (Y/N)? ')
-if re.match('^[yY]{1,1}$', export):
-    grid_map_export_txt()
-
-export_key = input(f'Export Key for {word_collection} Word Search to text '
-    f'file (Y/N)? ')
-if re.match('^[yY]{1,1}$', export):
-    grid_map_export_txt(key = 'Y')
-
-export = input(f'Export {word_collection} Word Search to Excel file (Y/N)? ')
-if re.match('^[yY]{1,1}$', export):
-    grid_map_export_excel()
-
-export_key = input(f'Export Key for {word_collection} Word Search to Excel '
-    f'file (Y/N)? ')
-if re.match('^[yY]{1,1}$', export_key):
-    grid_map_export_excel(key = 'Y')
-
-save_collection = input(f'Save {word_collection} Word Collection to database '
-    '(Y/N)? ')
-if re.match('^[yY]{1,1}$', save_collection):
-    save_collections()
-    save_grid_map = input(f'Save {word_collection} Word Search puzzle to '
-        'database (Y/N)? ')
-    if re.match('^[yY]{1,1}$', save_grid_map):
-        save_grid_maps()
-
-load_collection = input('Would you like to load an existing Word Collection '
-    '(Y/N)? ')
-if re.match('^[yY]{1,1}$', load_collection):
-    load_collections()
-
-
-# change_word = input(f'Change any words in {word_collection} (Y/N)?')
-# TODO:  Add functionality to pull down the words and go through them one
-# at a time and allow for changes; have the word replaced in the db.
-'''

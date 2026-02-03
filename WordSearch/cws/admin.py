@@ -6,8 +6,8 @@ from django.utils.html import mark_safe
 from .models import (
     Word,
     WordCollection,
-    CollectionGrid,
-    GridMap,
+    # CollectionGrid,
+    # GridMap,
 )
 
 
@@ -75,8 +75,8 @@ admin.site.register(Group, GroupAdmin)
 
 admin.site.register(Word, WordAdmin)
 admin.site.register(WordCollection, WordCollectionAdmin)
-admin.site.register(CollectionGrid)
-admin.site.register(GridMap)
+# admin.site.register(CollectionGrid)
+# admin.site.register(GridMap)
 
 admin.site.site_header = 'Find Your Words'
 admin.site.site_title = 'Find Your Words Admin'

@@ -1,9 +1,16 @@
 #!/usr/bin/env python
-import os
+import environ
+from pathlib import Path
 import sys
 
+
+env = environ.Env()
+BASE_DIR = Path(__file__).resolve().parent
+ENV_FILE_PATH = BASE_DIR / 'WordSearch' / '.env'
+environ.Env.read_env(ENV_FILE_PATH)
+
 if __name__ == "__main__":
-    os.environ.setdefault("DJANGO_SETTINGS_MODULE", "WordSearch.settings")
+    DJANGO_SETTINGS_MODULE = env('DJANGO_SETTINGS_MODULE')
     try:
         from django.core.management import execute_from_command_line
     except ImportError as exc:
