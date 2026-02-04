@@ -5,7 +5,7 @@
   <form method="POST">
   {% csrf_token %}
   <div class="row mx-md-auto mr-sm-5 mw-md-100 justify-content-end justify-content-xl-center">
-    <div class="mb-2 ml-2 me-md-auto">
+    <div class="mb-2 me-md-auto">
       <a href="{% url 'cws:index' %}"><button type="button" class="btn btn-warning" value="New Board">New Board</button></a>
       <button type="button" id="print_button" class="btn btn-warning" value="Print Board" onclick="callPrintView();">Print Board</button>
     </div>
@@ -48,11 +48,11 @@
   </div>
 </div>
 
-<div class="container">
+<div class="container game_holder">
     <div id="game_container_lr" class="row">
       <div id="word_list_container_lr" class="col-2 d-flex">
         <div class="row ml-1 w-100 align-self-start">
-          <h6 class="game_name w-100">Your Words:</h6>
+          <h6 class="your_words w-100">Your Words:</h6>
           <span class="word_list_board" style="--font-ratio: {{ font_ratio }};">
             {% for word in word_list %}
             {{ word }} <br>

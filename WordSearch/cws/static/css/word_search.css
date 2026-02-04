@@ -56,13 +56,25 @@ h6 {
     letter-spacing: clamp(calc(var(--font-ratio) * .06rem), calc(var(--font-ratio) * .08rem), calc(var(--font-ratio) * .15rem));
 }
 
+.game_holder {
+    padding-left: 5px;
+    padding-right: 5px;
+}
+
 .game_name {
     font-variant: small-caps;
     color: orange;
+    padding-left: 5px;
+    padding-right: 5px;
 }
 
 .grid {
     text-align: center;
+}
+
+.mycontent {
+    padding-left: 2px;
+    padding-right: 2px;
 }
 
 #print_button:hover {
@@ -113,8 +125,24 @@ h6 {
     font-size: 1.2em;
 }
 
+.your_words {
+    font-variant: small-caps;
+    color: orange;
+}
+
 @media (min-width: 578px) {
     #font_field {
         margin-top: 3em;
+    }
+}
+
+@media (min-width: 768px) {
+    .game_name {
+        padding-left: 15px;
+        padding-right: 15px;
+    }
+    .game_holder {
+        padding-left: 15px;
+        padding-right: 15px;
     }
 }
