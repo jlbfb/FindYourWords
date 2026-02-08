@@ -503,8 +503,10 @@ def grid_map_export_excel(
 #                 collection = int(collection)
 #                 words = tw.get_data('Words', columns = '*',
 #                     condition = f"word_collections_id = \'{collection}\'")
-#                 logger.debug(f'Words in the {collection_list[collection - 1][1]} '
-#                     'Collection:')
+#                 logger.debug(
+#                     f'Words in the {collection_list[collection - 1][1]} '
+#                     'Collection:'
+#                 )
 #                 for word in words:
 #                     word_list.append(word[2])
 #                     logger.debug(word[2])
@@ -518,6 +520,8 @@ def grid_map_export_excel(
 #         for change in changed_words:
 #             tw.update_data('Words', word = word_list[change],
 #                 id = words[change][0])
-#             logger.debug(f'Replaced {words[change][0]} with {word_list[change]}')
+#             logger.debug(
+#                 f'Replaced {words[change][0]} with {word_list[change]}'
+#             )
 #     else:
 #         logger.debug('No changes made.')

@@ -161,7 +161,7 @@ LOGGING = {
             'formatter': 'console'
         },
         'file': {
-            'level': 'DEBUG',
+            # 'level': 'DEBUG',
             'class': 'logging.FileHandler',
             'formatter': 'file',
             'filename': './logs/debug.log'

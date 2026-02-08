@@ -1,3 +1,5 @@
-from django.core.management.utils import get_random_secret_key 
+from django.core.management.utils import get_random_secret_key
+
+
 SECRET_KEY = get_random_secret_key()
 print(f'New Secret Key: {SECRET_KEY}')

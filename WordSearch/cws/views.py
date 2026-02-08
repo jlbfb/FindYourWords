@@ -5,7 +5,7 @@ import re
 import math
 from django.conf import settings
 from django.shortcuts import render
-from django.http import HttpResponseRedirect, HttpResponse
+from django.http import HttpResponseRedirect
 from .forms import WordsForm, WordCollectionForm
 # from .models import Word, WordCollection
 from .ws import (
@@ -43,7 +43,7 @@ def font_style_selector(request):
     else:
         try:
             font_style = request.session['font_style']
-        except:
+        except Exception:
             font_style = 'serif'
             logger.debug(f'Font Style found in DEFAULT: {font_style}')
     font_name = font_style.replace('_', ' ').title()
