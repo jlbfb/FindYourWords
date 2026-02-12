@@ -34,7 +34,11 @@ MEDIA_ROOT = '/var/www/tools/fyw/media'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['192.168.0.15', '127.0.0.1:8000']
+ALLOWED_HOSTS = [
+    '192.168.0.14:5000',
+    '127.0.0.1:5000',
+    'findyourwords.jjbtools.local',
+]
 
 
 # Application definition
@@ -92,34 +96,9 @@ X_FRAME_OPTIONS = "DENY"
 
 
 
-# LOGGING = {
-#     'version': 1,
-#     'disable_existing_loggers': False,
-#     'formatters': {
-#         'console': {
-#             'format': '%(name)-12s %(levelname)-8s %(message)s'
-#         },
-#         'file': {
-#             'format': '%(asctime)s %(name)-12s %(levelname)-8s %(message)s',
-#             'datefmt': '%d/%b/%Y %H:%M:%S'
-#         }
-#     },
-#     'handlers': {
-#         'console': {
-#             'class': 'logging.StreamHandler',
-#             'formatter': 'console'
-#         },
-#         'file': {
-#             'level': 'DEBUG',
-#             'class': 'logging.FileHandler',
-#             'formatter': 'file',
-#             'filename': './logs/debug.log'
-#         }
-#     },
-#     'loggers': {
-#         '': {
-#             'level': 'DEBUG',
-#             'handlers': ['console', 'file']
-#         }
-#     }
-# }
+LOGGING['handlers']['file'] = {
+    'level': 'INFO',
+    'class': 'logging.FileHandler',
+    'formatter': 'file',
+    'filename': '/var/www/tools/fyw/logs/debug.log'
+}
