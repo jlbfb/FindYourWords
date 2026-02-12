@@ -1,5 +1,7 @@
 **/*.xlsx
 **/*.txt
+!requirements.txt
+!requirements_server.txt
 **/__pycache__
 **/*.pyc
 **/*.ttf
@@ -13,3 +15,5 @@
 **/*.spec
 **/*.pdf
 **/.env
+**/*.bat
+**/.saves
