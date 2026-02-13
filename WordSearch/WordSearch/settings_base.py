@@ -43,15 +43,11 @@ DEBUG = False
 INSTALLED_APPS = [
     'cws.apps.CwsConfig',
     'cws.apps.MyAdminConfig',
-    # 'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    # 'cws',
-    # 'debug_toolbar',
-    # 'users'
 ]
 
 MIDDLEWARE = [
@@ -62,7 +58,6 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'debug_toolbar.middleware.DebugToolbarMiddleware',
 ]
 
 ROOT_URLCONF = 'WordSearch.urls'
@@ -85,17 +80,6 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'WordSearch.wsgi.application'
-
-
-# Database
-# https://docs.djangoproject.com/en/2.0/ref/settings/#databases
-
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.sqlite3',
-#         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-#     }
-# }
 
 
 # Password validation
@@ -137,12 +121,8 @@ USE_TZ = True
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 STATIC_URL = '/static/'
-# Production only:
-# STATIC_ROOT = '/home/jlbfb1/FindYourWords/WordSearch/cws'
 
 MEDIA_URL = '/media/'
-# Production only:
-# MEDIA_ROOT = '/home/jlbfb1/FindYourWords/WordSearch'
 
 LOGGING = {
     'version': 1,
@@ -161,7 +141,7 @@ LOGGING = {
             'formatter': 'console'
         },
         'file': {
-            # 'level': 'DEBUG',
+            'level': 'DEBUG',
             'class': 'logging.FileHandler',
             'formatter': 'file',
             'filename': './logs/debug.log'

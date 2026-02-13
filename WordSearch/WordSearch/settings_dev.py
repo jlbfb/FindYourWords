@@ -22,22 +22,23 @@ environ.Env.read_env()
 
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
-LOGGING_DIR = '/var/www/tools/fyw/logs'
+LOGGING_DIR = '/var/www/fyw/logs'
 
 STATIC_URL = '/static/'
-STATIC_ROOT = '/var/www/tools/fyw/static'
+STATIC_ROOT = '/var/www/fyw/static'
 
 MEDIA_URL = '/media/'
-MEDIA_ROOT = '/var/www/tools/fyw/media'
+MEDIA_ROOT = '/var/www/fyw/media'
 
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
 ALLOWED_HOSTS = [
-    '192.168.0.14:5000',
-    '127.0.0.1:5000',
-    'findyourwords.jjbtools.local',
+    '192.168.0.14',
+    '127.0.0.1',
+    'localhost',
+    'findyourwords.jjbtools.lan',
 ]
 
 
@@ -95,10 +96,9 @@ SECURE_CONTENT_TYPE_NOSNIFF = True
 X_FRAME_OPTIONS = "DENY"
 
 
-
 LOGGING['handlers']['file'] = {
     'level': 'INFO',
     'class': 'logging.FileHandler',
     'formatter': 'file',
-    'filename': '/var/www/tools/fyw/logs/debug.log'
+    'filename': '/var/www/fyw/logs/debug.log'
 }

@@ -3,6 +3,7 @@ from collections import defaultdict, deque
 from random import randint
 from openpyxl import Workbook
 from openpyxl.styles import Alignment
+from openpyxl.utils import get_column_letter
 from .ws_config import directions, diff_dir, diff_fill
 from django.conf import settings
 
@@ -412,7 +413,8 @@ def grid_map_export_excel(
         curr_col = 1
         curr_row += 1
         for j in range(0, grid):
-            ws.column_dimensions[chr(curr_col + 64)].width = 2.5
+            col_ref = get_column_letter(curr_col)
+            ws.column_dimensions[col_ref].width = 2.5
             if grid_map[f'{i}-{j}'][1] == 1:
                 ws.cell(row=curr_row, column=curr_col
                         ).value = grid_map[f'{i}-{j}'][0]

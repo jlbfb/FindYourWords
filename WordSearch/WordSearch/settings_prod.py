@@ -22,13 +22,13 @@ environ.Env.read_env()
 
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
-LOGGING_DIR = '/var/www/tools/fyw/logs'
+LOGGING_DIR = '/var/www/fyw/logs'
 
 STATIC_URL = '/static/'
-STATIC_ROOT = '/var/www/tools/fyw/static'
+STATIC_ROOT = '/var/www/fyw/static'
 
 MEDIA_URL = '/media/'
-MEDIA_ROOT = '/var/www/tools/fyw/media'
+MEDIA_ROOT = '/var/www/fyw/media'
 
 
 # SECURITY WARNING: SECRET_KEY_FALLBACKS CANNOT BE EMPTY
@@ -42,7 +42,10 @@ DEBUG = False
 ALLOWED_HOSTS = [
     'findyourwords.jjbtools.com',
     'www.findyourwords.jjbtools.com',
-    'localhost']
+    '192.168.0.14',
+    '127.0.0.1',
+    'localhost',
+]
 
 
 # Application definition
@@ -66,7 +69,9 @@ DATABASES = {
         'USER': env('DB_USERNAME'),
         'PASSWORD': env('DB_PASSWORD'),
         'HOST': env('DB_HOST'),
-        'PORT': env('DB_PORT')
+        'PORT': env('DB_PORT'),
+        'OPTIONS': {"sslmode": "require"},
+        'CONN_MAX_AGE': 3600,
     }
 }
 
@@ -78,35 +83,28 @@ AUTH_PASSWORD_VALIDATORS += [
 
 ]
 
+SESSION_COOKIE_SECURE = True
+SESSION_COOKIE_HTTPONLY = True
+SESSION_COOKIE_SAMESITE = "Lax"
 
-# LOGGING = {
-#     'version': 1,
-#     'disable_existing_loggers': False,
-#     'formatters': {
-#         'console': {
-#             'format': '%(name)-12s %(levelname)-8s %(message)s'
-#         },
-#         'file': {
-#             'format': '%(asctime)s %(name)-12s %(levelname)-8s %(message)s',
-#             'datefmt': '%d/%b/%Y %H:%M:%S'
-#         }
-#     },
-#     'handlers': {
-#         'console': {
-#             'class': 'logging.StreamHandler',
-#             'formatter': 'console'
-#         },
-#         'file': {
-#             'level': 'DEBUG',
-#             'class': 'logging.FileHandler',
-#             'formatter': 'file',
-#             'filename': './logs/debug.log'
-#         }
-#     },
-#     'loggers': {
-#         '': {
-#             'level': 'DEBUG',
-#             'handlers': ['console', 'file']
-#         }
-#     }
-# }
+CSRF_COOKIE_SECURE = True
+CSRF_COOKIE_HTTPONLY = True
+CSRF_COOKIE_SAMESITE = "Lax"
+
+# SECURITY WARNING: Locks communication to HTTPS
+# SECURE_HSTS_SECONDS = 31536000  # 1 year
+# SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+# SECURE_HSTS_PRELOAD = True
+# SECURE_SSL_REDIRECT = True
+
+SECURE_BROWSER_XSS_FILTER = True
+SECURE_CONTENT_TYPE_NOSNIFF = True
+X_FRAME_OPTIONS = "DENY"
+
+
+LOGGING['handlers']['file'] = {
+    'level': 'INFO',
+    'class': 'logging.FileHandler',
+    'formatter': 'file',
+    'filename': '/var/www/fyw/logs/debug.log'
+}

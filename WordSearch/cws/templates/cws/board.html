@@ -82,7 +82,7 @@
                 {% if forloop.counter|divisibleby:list_split %}
                   {% if not forloop.last %}
                     </div>
-                    <div class="col-4 pl-3 pl-sm-5 mb-3 word_list_board">
+                    <div class="col-4 pl-3 pl-sm-5 mb-3 word_list_board" style="--font-ratio: {{ font_ratio }};">
                   {% endif %}
                 {% endif %}
               {% endfor %}
